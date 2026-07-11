@@ -11,7 +11,6 @@ export const PRODUCTS = [
       'Factura y boleta electrónica SII',
       'Multi-sucursal y multi-bodega',
     ],
-    price: 12,
     href: '/vexor',
   },
   {
@@ -26,7 +25,6 @@ export const PRODUCTS = [
       'Gestión de múltiples profesionales',
       'Pagos online al reservar',
     ],
-    price: 15,
     href: '#contacto',
   },
   {
@@ -41,7 +39,6 @@ export const PRODUCTS = [
       'Gestión de pedidos y despacho',
       'Dominio propio incluido',
     ],
-    price: 20,
     href: '#contacto',
   },
 ]

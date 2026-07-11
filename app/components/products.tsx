@@ -33,6 +33,28 @@ export default function Products() {
         }}>
           {PRODUCTS.map(p => (
             <div key={p.id} className="prod-card">
+
+              {/* Badge disponible / próximamente */}
+              {p.id === 'vexor' ? (
+                <span style={{
+                  display: 'inline-block', fontSize: 11,
+                  padding: '3px 10px', borderRadius: 100,
+                  background: 'rgba(16,185,129,0.1)',
+                  color: '#10b981', marginBottom: 16, fontWeight: 500,
+                }}>
+                  ✓ Disponible ahora
+                </span>
+              ) : (
+                <span style={{
+                  display: 'inline-block', fontSize: 11,
+                  padding: '3px 10px', borderRadius: 100,
+                  background: 'rgba(245,158,11,0.1)',
+                  color: '#f59e0b', marginBottom: 16, fontWeight: 500,
+                }}>
+                  Próximamente
+                </span>
+              )}
+
               <div style={{ fontSize: 32, marginBottom: 20 }}>{p.icon}</div>
               <h3 style={{
                 fontFamily: 'var(--font-display)',
@@ -63,18 +85,17 @@ export default function Products() {
                   </li>
                 ))}
               </ul>
-              <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 14 }}>
-                Desde{' '}
-                <strong style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 22, fontWeight: 700, color: 'var(--text)',
-                }}>
-                  ${p.price}
-                </strong>{' '}
-                USD / mes
+
+              {/* Sin precio — contacto */}
+              <p style={{
+                fontSize: 13, color: 'var(--muted)',
+                marginBottom: 14, fontStyle: 'italic',
+              }}>
+                Precio a convenir según tu negocio
               </p>
-              <a href={p.href} className="prod-link">
-                Conocer {p.name} →
+
+              <a href={p.href} className={p.id === 'vexor' ? 'prod-link' : 'prod-link prod-link-muted'}>
+                {p.id === 'vexor' ? `Conocer ${p.name} →` : 'Solicitar información →'}
               </a>
             </div>
           ))}
@@ -108,6 +129,10 @@ export default function Products() {
           transition: gap .2s; margin-top: auto;
         }
         .prod-link:hover { gap: 10px; }
+        .prod-link-muted {
+          color: var(--muted);
+        }
+        .prod-link-muted:hover { color: var(--cyan); }
       `}</style>
     </section>
   )
