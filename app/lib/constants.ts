@@ -12,7 +12,7 @@ export const PRODUCTS = [
       'Multi-sucursal y multi-bodega',
     ],
     price: 12,
-    href: '#contacto',
+    href: '/vexor',
   },
   {
     id: 'slotly',
