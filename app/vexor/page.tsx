@@ -190,7 +190,7 @@ export default function VexorLanding() {
       {/* Footer */}
       <footer style={{ borderTop: '1px solid rgba(14,165,233,0.14)', padding: '32px', textAlign: 'center' }}>
         <p style={{ fontSize: 13, color: '#64748b' }}>
-          © {new Date().getFullYear()} Vexor · <link href="/" style={{ color: '#0EA5E9', textDecoration: 'none' }}>pgstudio.tech</link> · Hecho con ♥ en Chile
+          © {new Date().getFullYear()} Vexor · <Link href="/" style={{ color: '#0EA5E9', textDecoration: 'none' }}>pgstudio.tech</Link> · Hecho con ♥ en Chile
         </p>
       </footer>
     </main>
