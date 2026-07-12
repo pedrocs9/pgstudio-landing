@@ -5,6 +5,7 @@ import { vexorDb } from '../../lib/vexor-db'
 import { tenants, tenantSubscriptions } from '../../lib/vexor-schema'
 import { desc } from 'drizzle-orm'
 import Link from 'next/link'
+import { eq } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,17 +13,18 @@ export default async function FinancialDashboard() {
   const [allTenants, allPayments] = await Promise.all([
     vexorDb.select().from(tenants),
     db.select().from(clientPayments).orderBy(desc(clientPayments.createdAt)),
-  ])
+  ]);
 
   const subsData = await Promise.all(
-    allTenants.map(async t => {
-      const [sub] = await vexorDb.select().from(tenantSubscriptions)
-        .where((s: any) => s.tenantId.eq(t.id))
-      return { ...t, sub: sub ?? null }
-    })
-  )
-
-  const activeSubs     = subsData.filter(t => t.sub?.status === 'active')
+    allTenants.map(async (t) => {
+      const [sub] = await vexorDb
+        .select()
+        .from(tenantSubscriptions)
+        .where(eq(tenantSubscriptions.tenantId, t.id)); // ← sintaxis correcta
+      return { ...t, sub: sub ?? null };
+    }),
+  );
+  const activeSubs = subsData.filter((t) => t.sub?.status === "active");
   const suspendedSubs  = subsData.filter(t => t.sub?.status === 'suspended')
   const mrr            = activeSubs.reduce((s, t) => s + Number(t.sub?.totalPrice ?? 0), 0)
 
