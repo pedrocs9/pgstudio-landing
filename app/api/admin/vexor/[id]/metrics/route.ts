@@ -23,24 +23,26 @@ export async function GET(
     thisMonth.setDate(1)
     thisMonth.setHours(0, 0, 0, 0)
 
-    const salesToday = allSales.filter(s => new Date(s.createdAt!) >= today)
-    const salesMonth = allSales.filter(s => new Date(s.createdAt!) >= thisMonth)
-
-    const totalRevenue      = allSales.reduce((s, sale) => s + Number(sale.total), 0)
-    const revenueThisMonth  = salesMonth.reduce((s, sale) => s + Number(sale.total), 0)
-    const lastSale          = allSales.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime())[0]
+    const salesToday   = allSales.filter(s => new Date(s.createdAt!) >= today)
+    const salesMonth   = allSales.filter(s => new Date(s.createdAt!) >= thisMonth)
+    const totalRevenue = allSales.reduce((s, sale) => s + Number(sale.total), 0)
+    const revenueMonth = salesMonth.reduce((s, sale) => s + Number(sale.total), 0)
+    const lastSale     = allSales.sort((a, b) =>
+      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+    )[0]
 
     return NextResponse.json({
-      totalSales:      allSales.length,
-      salesToday:      salesToday.length,
-      salesThisMonth:  salesMonth.length,
+      totalSales:       allSales.length,
+      salesToday:       salesToday.length,
+      salesThisMonth:   salesMonth.length,
       totalRevenue,
-      revenueThisMonth,
-      totalProducts:   allProducts.length,
-      totalCustomers:  allCustomers.length,
-      lastActivity:    lastSale?.createdAt ?? null,
+      revenueThisMonth: revenueMonth,
+      totalProducts:    allProducts.length,
+      totalCustomers:   allCustomers.length,
+      lastActivity:     lastSale?.createdAt ?? null,
     })
   } catch (error) {
+    console.error(error)
     return NextResponse.json({ error: 'Error al obtener métricas' }, { status: 500 })
   }
 }
