@@ -31,7 +31,7 @@ export default async function QuoteDetailPage({
           ← Cotizaciones
         </Link>
       </div>
-      <QuoteDetailClient quote={quote} items={items} />
+      <QuoteDetailClient quote={quote as any} items={items as any} />
     </div>
   )
 }
