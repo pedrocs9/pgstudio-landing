@@ -4,6 +4,8 @@ import { leads, clients } from '../lib/schema'
 import { desc } from 'drizzle-orm'
 import Link from 'next/link'
 import LeadsClient from '../components/leads-client'
+import AdminQuickLinks from '../components/admin-quick-links'
+
 
 export const dynamic = 'force-dynamic'
 
@@ -222,6 +224,7 @@ export default async function AdminPage() {
           ))}
         </div>
       </div>
+      <AdminQuickLinks />
       </div>
     </main>
   );
