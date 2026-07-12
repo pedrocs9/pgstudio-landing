@@ -49,6 +49,7 @@ export default function NewTenantClient() {
     rut: '', phone: '', address: '',
     adminName: '', adminEmail: '', password: '',
     basePrice: '15000',
+      notes: '',
   })
   const [selectedModules, setSelectedModules] = useState<string[]>([
     'pos', 'inventory', 'dashboard',
