@@ -23,3 +23,27 @@ body {
 }
 
 .font-display { font-family: var(--font-display); }
+
+@media (max-width: 768px) {
+  /* Dashboard stats */
+  .dashboard-stats {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Tablas — scroll horizontal */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Configuración */
+  .settings-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Reportes */
+  .reports-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
