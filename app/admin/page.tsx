@@ -147,92 +147,81 @@ export default async function AdminPage() {
         {/* Leads */}
         <LeadsClient leads={allLeads} />
 
-        {/* Link Vexor */}
-        <div
-          style={{
-            marginTop: 32,
-            paddingTop: 24,
-            borderTop: "1px solid var(--border)",
-          }}
-        >
-          <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>
-            Gestión de productos SaaS
-          </p>
-          <div style={{ display: "flex", gap: 10 }}>
-            <Link
-              href="/admin/dashboard"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 20px",
-                borderRadius: 8,
-                background: "rgba(16,185,129,0.1)",
-                border: "1px solid var(--success)",
-                color: "var(--success)",
-                textDecoration: "none",
-                fontSize: 14,
-                fontWeight: 600,
-              }}
+       {/* Gestión SaaS */}
+      <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
+        <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.1em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 16 }}>
+          Gestión del estudio
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+          {[
+            {
+              href:  '/admin/dashboard',
+              icon:  '📊',
+              label: 'Dashboard',
+              desc:  'MRR, cobros y finanzas',
+              color: 'var(--success)',
+              bg:    'rgba(16,185,129,0.08)',
+              border:'rgba(16,185,129,0.25)',
+            },
+            {
+              href:  '/admin/vexor',
+              icon:  '🏪',
+              label: 'Clientes Vexor',
+              desc:  'Suscripciones y módulos',
+              color: 'var(--cyan)',
+              bg:    'rgba(14,165,233,0.08)',
+              border:'rgba(14,165,233,0.25)',
+            },
+            {
+              href:  '/admin/proyectos',
+              icon:  '🌐',
+              label: 'Proyectos web',
+              desc:  'Landings y sistemas',
+              color: 'var(--warning)',
+              bg:    'rgba(245,158,11,0.08)',
+              border:'rgba(245,158,11,0.25)',
+            },
+            {
+              href:  '/admin/cotizaciones',
+              icon:  '📄',
+              label: 'Cotizaciones',
+              desc:  'Presupuestos en PDF',
+              color: '#8b5cf6',
+              bg:    'rgba(139,92,246,0.08)',
+              border:'rgba(139,92,246,0.25)',
+            },
+          ].map(item => (
+            <Link key={item.href} href={item.href} style={{
+              display: 'flex', flexDirection: 'column', gap: 10,
+              padding: '20px', borderRadius: 12,
+              background: item.bg,
+              border: `1px solid ${item.border}`,
+              textDecoration: 'none',
+              transition: 'transform .15s',
+            }}
+              onMouseEnter={(e: any) => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={(e: any) => e.currentTarget.style.transform = 'translateY(0)'}
             >
-              📊 Dashboard financiero →
+              <span style={{ fontSize: 28 }}>{item.icon}</span>
+              <div>
+                <p style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 15, fontWeight: 600,
+                  color: item.color, marginBottom: 4,
+                }}>
+                  {item.label}
+                </p>
+                <p style={{ fontSize: 12, color: 'var(--muted)' }}>
+                  {item.desc}
+                </p>
+              </div>
+              <span style={{ fontSize: 12, color: item.color, marginTop: 'auto' }}>
+                Abrir →
+              </span>
             </Link>
-            <Link
-              href="/admin/proyectos"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 20px",
-                borderRadius: 8,
-                background: "rgba(245,158,11,0.1)",
-                border: "1px solid rgba(245,158,11,0.3)",
-                color: "var(--warning)",
-                textDecoration: "none",
-                fontSize: 14,
-                fontWeight: 600,
-              }}
-            >
-              🌐 Proyectos web →
-            </Link>
-            <Link
-              href="/admin/cotizaciones"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 20px",
-                borderRadius: 8,
-                background: "rgba(139,92,246,0.1)",
-                border: "1px solid rgba(139,92,246,0.3)",
-                color: "#8b5cf6",
-                textDecoration: "none",
-                fontSize: 14,
-                fontWeight: 600,
-              }}
-            >
-              📄 Cotizaciones →
-            </Link>
-            <Link
-              href="/admin/vexor"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 20px",
-                borderRadius: 8,
-                background: "rgba(14,165,233,0.1)",
-                border: "1px solid var(--border-h)",
-                color: "var(--cyan)",
-                textDecoration: "none",
-                fontSize: 14,
-                fontWeight: 600,
-              }}
-            >
-              🏪 Clientes Vexor →
-            </Link>
-          </div>
+          ))}
         </div>
+      </div>
       </div>
     </main>
   );
