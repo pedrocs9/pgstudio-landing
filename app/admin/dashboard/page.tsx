@@ -90,10 +90,10 @@ export default async function FinancialDashboard() {
         {/* Stats principales */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 32 }}>
           {[
-            { label: 'MRR',                value: `$${mrr} USD`,                    color: 'var(--cyan)',    icon: '💰' },
-            { label: 'Cobrado este mes',   value: `$${revenueThisMonth} USD`,        color: 'var(--success)', icon: '✅' },
-            { label: 'Pendiente este mes', value: `$${Math.max(0, pendingThisMonth)} USD`, color: pendingThisMonth > 0 ? 'var(--danger)' : 'var(--success)', icon: '⏳' },
-            { label: 'Clientes activos',   value: String(activeSubs.length),         color: 'var(--text)',    icon: '🏪' },
+          { label: 'MRR',                value: '$' + mrr.toLocaleString('es-CL') + ' CLP',                          color: 'var(--cyan)',    icon: '💰' },
+{ label: 'Cobrado este mes',   value: '$' + revenueThisMonth.toLocaleString('es-CL') + ' CLP',              color: 'var(--success)', icon: '✅' },
+{ label: 'Pendiente este mes', value: '$' + Math.max(0, pendingThisMonth).toLocaleString('es-CL') + ' CLP', color: pendingThisMonth > 0 ? 'var(--danger)' : 'var(--success)', icon: '⏳' },
+{ label: 'Clientes activos',   value: String(activeSubs.length),                                            color: 'var(--text)',    icon: '🏪' },
           ].map((s, i) => (
             <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>

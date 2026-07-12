@@ -60,7 +60,7 @@ export default async function VexorTenantsPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'MRR total',         value: `$${totalMRR} USD`,       color: 'var(--cyan)' },
+          { label: 'MRR total', value: `$${totalMRR.toLocaleString('es-CL')} CLP`, color: 'var(--cyan)' },
           { label: 'Clientes activos',  value: String(activeCount),       color: 'var(--success)' },
           { label: 'Suspendidos',       value: String(suspendedCount),    color: suspendedCount > 0 ? 'var(--danger)' : 'var(--muted)' },
         ].map((s, i) => (
