@@ -14,16 +14,33 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'pgstudio.tech — Software que hace crecer tu negocio',
-  description: 'Soluciones SaaS para negocios chilenos. Gestión de ventas, agendamiento y tiendas online.',
-  keywords: 'software chile, punto de venta, agendamiento, tienda online, SII',
+  title:       'pgstudio · Studio de software chileno',
+  description: 'Construimos productos digitales para negocios chilenos. Vexor, AgendaPro, Shoppio y proyectos a medida.',
+  metadataBase: new URL('https://www.pgstudio.tech'),
   openGraph: {
-    title: 'pgstudio.tech',
-    description: 'Software que hace crecer tu negocio',
-    url: 'https://pgstudio.tech',
-    siteName: 'pgstudio.tech',
-    locale: 'es_CL',
-    type: 'website',
+    title:       'pgstudio · Studio de software chileno',
+    description: 'Construimos productos digitales para negocios chilenos. Vexor, AgendaPro, Shoppio y proyectos a medida.',
+    url:         'https://www.pgstudio.tech',
+    siteName:    'pgstudio',
+    locale:      'es_CL',
+    type:        'website',
+    images: [
+      {
+        url:    '/og-image.png',
+        width:  1200,
+        height: 630,
+        alt:    'pgstudio · Studio de software chileno',
+      }
+    ],
+  },
+  twitter: {
+    card:        'summary_large_image',
+    title:       'pgstudio · Studio de software chileno',
+    description: 'Construimos productos digitales para negocios chilenos.',
+    images:      ['/og-image.png'],
+  },
+  icons: {
+    icon: '/favicon.ico',
   },
 }
 

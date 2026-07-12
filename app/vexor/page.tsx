@@ -2,6 +2,7 @@
 export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { Space_Grotesk, Inter } from 'next/font/google'
+import type { Metadata } from 'next'
 
 const display = Space_Grotesk({ subsets: ['latin'], weight: ['400','500','600','700'] })
 const body    = Inter({ subsets: ['latin'] })
@@ -24,6 +25,17 @@ const FOR_WHO = [
   { icon: '🔧', title: 'Ferreterías',     desc: 'Inventario con categorías, SKU y múltiples unidades.' },
   { icon: '🍶', title: 'Botillerías',     desc: 'Control de vencimientos, envases y ventas rápidas.' },
 ]
+
+export const metadata: Metadata = {
+  title:       'Vexor · Sistema de ventas para negocios chilenos',
+  description: 'POS táctil, inventario, proveedores, deudas y más. El sistema de gestión pensado para distribuidoras, minimarkets y ferreterías en Chile.',
+  openGraph: {
+    title:       'Vexor · Sistema de ventas para negocios chilenos',
+    description: 'POS táctil, inventario, proveedores, deudas y más.',
+    url:         'https://www.pgstudio.tech/vexor',
+    images: [{ url: '/og-vexor.png', width: 1200, height: 630 }],
+  },
+}
 
 export default function VexorLanding() {
   return (
