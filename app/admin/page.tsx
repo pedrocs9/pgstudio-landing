@@ -196,6 +196,24 @@ export default async function AdminPage() {
               🌐 Proyectos web →
             </Link>
             <Link
+              href="/admin/cotizaciones"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "10px 20px",
+                borderRadius: 8,
+                background: "rgba(139,92,246,0.1)",
+                border: "1px solid rgba(139,92,246,0.3)",
+                color: "#8b5cf6",
+                textDecoration: "none",
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              📄 Cotizaciones →
+            </Link>
+            <Link
               href="/admin/vexor"
               style={{
                 display: "inline-flex",
@@ -213,7 +231,6 @@ export default async function AdminPage() {
             >
               🏪 Clientes Vexor →
             </Link>
-            
           </div>
         </div>
       </div>

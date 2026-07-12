@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
+    "@react-pdf/renderer": "^4.5.1",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
@@ -22,6 +23,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-pdf": "^6.2.0",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",

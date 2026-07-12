@@ -69,3 +69,27 @@ export const projectPayments = pgTable('project_payments', {
   note:      text('note'),
   createdAt: timestamp('created_at').defaultNow(),
 })
+
+export const quotes = pgTable('quotes', {
+  id:          serial('id').primaryKey(),
+  number:      text('number').notNull(),
+  clientName:  text('client_name').notNull(),
+  clientEmail: text('client_email'),
+  clientPhone: text('client_phone'),
+  status:      text('status').notNull().default('draft'),
+  validDays:   integer('valid_days').default(15),
+  notes:       text('notes'),
+  total:       decimal('total', { precision: 10, scale: 2 }).notNull().default('0'),
+  currency:    text('currency').notNull().default('CLP'),
+  createdAt:   timestamp('created_at').defaultNow(),
+})
+
+export const quoteItems = pgTable('quote_items', {
+  id:          serial('id').primaryKey(),
+  quoteId:     integer('quote_id').notNull(),
+  description: text('description').notNull(),
+  detail:      text('detail'),
+  qty:         integer('qty').notNull().default(1),
+  unitPrice:   decimal('unit_price', { precision: 10, scale: 2 }).notNull(),
+  subtotal:    decimal('subtotal', { precision: 10, scale: 2 }).notNull(),
+})
