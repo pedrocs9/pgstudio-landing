@@ -50,3 +50,25 @@ export const tenantSubscriptions = pgTable('tenant_subscriptions', {
   notes:       text('notes'),
   createdAt:   timestamp('created_at').defaultNow(),
 })
+
+export const sales = pgTable('sales', {
+  id:            serial('id').primaryKey(),
+  tenantId:      integer('tenant_id').notNull(),
+  total:         decimal('total', { precision: 10, scale: 2 }).notNull(),
+  status:        text('status').notNull().default('completed'),
+  paymentMethod: text('payment_method').notNull().default('cash'),
+  createdAt:     timestamp('created_at').defaultNow(),
+})
+
+export const products = pgTable('products', {
+  id:       serial('id').primaryKey(),
+  tenantId: integer('tenant_id').notNull(),
+  name:     text('name').notNull(),
+  active:   boolean('active').notNull().default(true),
+})
+
+export const customers = pgTable('customers', {
+  id:       serial('id').primaryKey(),
+  tenantId: integer('tenant_id').notNull(),
+  name:     text('name').notNull(),
+})
