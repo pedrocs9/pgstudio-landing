@@ -43,3 +43,29 @@ export const activityLogs = pgTable('activity_logs', {
   detail:    text('detail'),
   createdAt: timestamp('created_at').defaultNow(),
 })
+
+export const projects = pgTable('projects', {
+  id:          serial('id').primaryKey(),
+  name:        text('name').notNull(),
+  clientName:  text('client_name').notNull(),
+  type:        text('type').notNull().default('landing'),
+  status:      text('status').notNull().default('development'),
+  url:         text('url'),
+  repoUrl:     text('repo_url'),
+  deployUrl:   text('deploy_url'),
+  monthlyFee:  decimal('monthly_fee', { precision: 10, scale: 2 }).default('0'),
+  oneTimeFee:  decimal('one_time_fee', { precision: 10, scale: 2 }).default('0'),
+  notes:       text('notes'),
+  startDate:   timestamp('start_date').defaultNow(),
+  createdAt:   timestamp('created_at').defaultNow(),
+})
+
+export const projectPayments = pgTable('project_payments', {
+  id:        serial('id').primaryKey(),
+  projectId: integer('project_id').notNull(),
+  amount:    decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  currency:  text('currency').notNull().default('CLP'),
+  type:      text('type').notNull().default('monthly'),
+  note:      text('note'),
+  createdAt: timestamp('created_at').defaultNow(),
+})
