@@ -41,4 +41,4 @@ export async function PATCH(
     console.error(error)
     return NextResponse.json({ error: 'Error al actualizar' }, { status: 500 })
   }
-}
+} 
