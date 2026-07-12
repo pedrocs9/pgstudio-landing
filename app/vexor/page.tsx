@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { Space_Grotesk, Inter } from 'next/font/google'
 
