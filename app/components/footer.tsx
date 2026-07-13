@@ -16,10 +16,10 @@ export default function Footer() {
   return (
     <footer style={{
       borderTop: '1px solid var(--border)',
-      padding: '48px 0 32px',
+      padding: '56px 0 34px',
       background: 'var(--bg)',
     }}>
-      <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
+      <div className="section-shell">
 
         {/* Top row */}
         <div className="footer-grid">
@@ -32,17 +32,17 @@ export default function Footer() {
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 8,
-                background: 'var(--cyan)',
+                background: 'linear-gradient(135deg, var(--ink), var(--cyan))',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontFamily: 'var(--font-display)',
                 fontSize: 14, fontWeight: 700,
-                color: 'var(--bg)', letterSpacing: '-0.5px',
+                color: '#fff', letterSpacing: '-0.5px',
               }}>
                 PG
               </div>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 15, fontWeight: 600, color: 'var(--text)',
+                fontSize: 15, fontWeight: 700, color: 'var(--text)',
               }}>
                 pgstudio<span style={{ color: 'var(--cyan-l)' }}>.tech</span>
               </span>
@@ -135,9 +135,10 @@ export default function Footer() {
         .footer-link {
           display: block; font-size: 13px;
           color: var(--muted); text-decoration: none;
-          margin-bottom: 8px; transition: color .2s;
+          margin-bottom: 8px; transition: color var(--duration) var(--ease);
         }
         .footer-link:hover { color: var(--cyan); }
+        .footer-link:focus-visible { color: var(--cyan); }
         @media (max-width: 768px) {
           .footer-grid { grid-template-columns: 1fr 1fr; }
         }

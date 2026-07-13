@@ -3,16 +3,16 @@
 import { useState } from 'react'
 
 const PRODUCTS = [
-  { value: 'vexor',   label: 'Vexor — Sistema de ventas' },
-  { value: 'slotly',  label: 'Slotly — Agendamiento' },
+  { value: 'vexor', label: 'Vexor — Sistema de ventas' },
+  { value: 'slotly', label: 'Slotly — Agendamiento' },
   { value: 'shoppio', label: 'Shoppio — Tienda online' },
-  { value: 'custom',  label: 'Proyecto a medida' },
-  { value: 'other',   label: 'Otro / No sé aún' },
+  { value: 'custom', label: 'Proyecto a medida' },
+  { value: 'other', label: 'Otro / No sé aún' },
 ]
 
 export default function Cta() {
-  const [form, setForm]     = useState({ name: '', email: '', product: '', message: '' })
-  const [sent, setSent]     = useState(false)
+  const [form, setForm] = useState({ name: '', email: '', product: '', message: '' })
+  const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -32,122 +32,182 @@ export default function Cta() {
     setTimeout(() => setSent(false), 5000)
   }
 
-  const inputStyle = {
-    padding: '12px 16px',
-    background: 'var(--bg2)',
-    border: '1px solid var(--border)',
-    borderRadius: 10, color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    fontSize: 14, outline: 'none', width: '100%',
-  }
-
   return (
-    <section id="contacto" style={{ padding: '100px 0', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-        <div style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 20, padding: '72px 40px',
-          textAlign: 'center', position: 'relative', overflow: 'hidden',
-        }}>
-          <div aria-hidden style={{
-            position: 'absolute', bottom: -80, left: '50%',
-            transform: 'translateX(-50%)',
-            width: 400, height: 400, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(14,165,233,0.10) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }} />
+    <section id="contacto" className="section-space" style={{ background: 'var(--bg2)' }}>
+      <div className="section-shell">
+        <div className="cta-panel">
+          <div aria-hidden className="cta-glow" />
 
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <p style={{
-              fontSize: 12, fontWeight: 600, letterSpacing: '.12em',
-              color: 'var(--cyan)', textTransform: 'uppercase', marginBottom: 14,
-            }}>
-              Empieza hoy
-            </p>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(28px, 4vw, 44px)',
-              fontWeight: 700, letterSpacing: '-1px',
-              color: 'var(--text)', marginBottom: 16,
-            }}>
-              ¿Listo para hacer crecer tu negocio?
+          <div className="cta-content">
+            <p className="section-eyebrow">Siguiente paso</p>
+            <h2 className="section-title">
+              Cuéntanos qué quieres ordenar, vender o construir
             </h2>
-            <p style={{
-              fontSize: 17, color: 'var(--muted)',
-              maxWidth: 460, margin: '0 auto 40px', lineHeight: 1.65,
-            }}>
-              Cuéntanos sobre tu negocio y te contactamos en menos de 24 horas.
+            <p className="cta-copy">
+              Te responderemos con una primera orientación comercial: qué solución
+              calza mejor, qué información falta y cómo podríamos avanzar. Sin
+              compromiso y sin spam.
             </p>
+
+            <div className="cta-trust">
+              <span>Respuesta en menos de 24 horas</span>
+              <span>Revisión inicial sin costo</span>
+              <span>Soporte local en Chile</span>
+            </div>
 
             {sent ? (
-              <div style={{
-                padding: '20px', borderRadius: 12,
-                background: 'rgba(16,185,129,0.1)',
-                border: '1px solid var(--success)',
-                color: 'var(--success)', fontSize: 16, fontWeight: 600,
-                maxWidth: 440, margin: '0 auto',
-              }}>
-                ✓ Perfecto, te contactamos pronto.
+              <div className="success-message">
+                Perfecto, recibimos tu mensaje. Te contactamos pronto.
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{
-                display: 'flex', flexDirection: 'column',
-                gap: 12, maxWidth: 480, margin: '0 auto',
-                textAlign: 'left',
-              }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <form onSubmit={handleSubmit} className="contact-form">
+                <div className="contact-row">
                   <input
-                    type="text" placeholder="Tu nombre"
+                    type="text"
+                    placeholder="Tu nombre"
                     value={form.name}
-                    onChange={e => setForm({ ...form, name: e.target.value })}
-                    style={inputStyle}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="input-surface"
                   />
                   <input
-                    type="email" placeholder="tu@email.com" required
+                    type="email"
+                    placeholder="tu@email.com"
+                    required
                     value={form.email}
-                    onChange={e => setForm({ ...form, email: e.target.value })}
-                    style={inputStyle}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className="input-surface"
                   />
                 </div>
                 <select
                   value={form.product}
-                  onChange={e => setForm({ ...form, product: e.target.value })}
-                  style={{ ...inputStyle, color: form.product ? 'var(--text)' : 'var(--muted)' }}
+                  onChange={(e) => setForm({ ...form, product: e.target.value })}
+                  className="input-surface"
+                  style={{ color: form.product ? 'var(--text)' : 'var(--muted)' }}
                 >
                   <option value="">¿Qué producto te interesa?</option>
-                  {PRODUCTS.map(p => (
+                  {PRODUCTS.map((p) => (
                     <option key={p.value} value={p.value}>{p.label}</option>
                   ))}
                 </select>
                 <textarea
-                  placeholder="Cuéntanos sobre tu negocio (opcional)"
+                  placeholder="Cuéntanos brevemente qué necesitas resolver (opcional)"
                   value={form.message}
-                  onChange={e => setForm({ ...form, message: e.target.value })}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
                   rows={3}
-                  style={{ ...inputStyle, resize: 'vertical' }}
+                  className="input-surface"
+                  style={{ resize: 'vertical' }}
                 />
                 <button
-                  type="submit" disabled={loading}
-                  style={{
-                    padding: '14px',
-                    background: 'var(--cyan)', color: 'var(--bg)',
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 15, fontWeight: 600,
-                    border: 'none', borderRadius: 10,
-                    cursor: loading ? 'wait' : 'pointer',
-                  }}
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary"
+                  style={{ border: 'none', cursor: loading ? 'wait' : 'pointer', width: '100%' }}
                 >
-                  {loading ? 'Enviando...' : 'Quiero una demo →'}
+                  {loading ? 'Enviando...' : 'Hablar sobre mi proyecto →'}
                 </button>
-                <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-                  Sin spam. Te respondemos en menos de 24 horas.
+                <p className="form-note">
+                  No necesitas tener una especificación lista. Basta con contarnos
+                  el problema o el producto que te interesa.
                 </p>
               </form>
             )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        .cta-panel {
+          background: linear-gradient(180deg, #ffffff, rgba(248,250,252,0.92));
+          border: 1px solid var(--border);
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow-lg);
+          overflow: hidden;
+          padding: 76px 40px;
+          position: relative;
+          text-align: center;
+        }
+        .cta-glow {
+          background: radial-gradient(circle, rgba(14,165,233,0.14) 0%, transparent 70%);
+          border-radius: 50%;
+          bottom: -110px;
+          height: 460px;
+          left: 50%;
+          pointer-events: none;
+          position: absolute;
+          transform: translateX(-50%);
+          width: 460px;
+        }
+        .cta-content {
+          margin: 0 auto;
+          max-width: 720px;
+          position: relative;
+          z-index: 1;
+        }
+        .cta-copy {
+          color: var(--muted);
+          font-size: 17px;
+          line-height: 1.75;
+          margin: 0 auto 24px;
+          max-width: 560px;
+        }
+        .cta-trust {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          justify-content: center;
+          margin: 0 auto 34px;
+          max-width: 650px;
+        }
+        .cta-trust span {
+          background: rgba(255,255,255,.72);
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          color: var(--muted-strong);
+          font-size: 12px;
+          font-weight: 700;
+          padding: 8px 11px;
+        }
+        .contact-form {
+          display: flex;
+          flex-direction: column;
+          gap: 13px;
+          margin: 0 auto;
+          max-width: 500px;
+          text-align: left;
+        }
+        .contact-row {
+          display: grid;
+          gap: 13px;
+          grid-template-columns: 1fr 1fr;
+        }
+        .success-message {
+          background: rgba(5,150,105,0.08);
+          border: 1px solid rgba(5,150,105,0.22);
+          border-radius: 16px;
+          color: var(--success);
+          font-size: 16px;
+          font-weight: 700;
+          margin: 0 auto;
+          max-width: 480px;
+          padding: 20px;
+        }
+        .form-note {
+          color: var(--muted);
+          font-size: 12px;
+          line-height: 1.5;
+          text-align: center;
+        }
+        @media (max-width: 640px) {
+          .cta-panel { padding: 52px 22px; }
+          .contact-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 420px) {
+          .cta-panel {
+            border-radius: 22px;
+            padding: 44px 18px;
+          }
+        }
+      `}</style>
     </section>
   )
 }

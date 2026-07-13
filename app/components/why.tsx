@@ -2,65 +2,62 @@ import { WHY_ITEMS } from '../lib/constants'
 
 export default function Why() {
   return (
-    <section id="por-que" style={{ padding: '100px 0', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-
+    <section id="por-que" className="section-space" style={{ background: 'var(--bg)' }}>
+      <div className="section-shell">
         <div style={{ marginBottom: 56 }}>
-          <p style={{
-            fontSize: 12, fontWeight: 600, letterSpacing: '.12em',
-            color: 'var(--cyan)', textTransform: 'uppercase', marginBottom: 14,
-          }}>
-            Por qué elegirnos
-          </p>
-          <h2 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(28px, 4vw, 44px)',
-            fontWeight: 700, letterSpacing: '-1px',
-            color: 'var(--text)', marginBottom: 16,
-          }}>
-            Tecnología de punta,<br />precio justo
-          </h2>
-          <p style={{ fontSize: 17, color: 'var(--muted)', maxWidth: 520, lineHeight: 1.65 }}>
+          <p className="section-eyebrow">Por qué elegirnos</p>
+          <h2 className="section-title">Tecnología de punta,<br />precio justo</h2>
+          <p className="section-copy">
             Construimos con el mismo stack de las empresas más grandes del mundo,
             pero para los negocios de tu barrio.
           </p>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: 16,
-        }}>
+        <div className="why-grid">
           {WHY_ITEMS.map((item, i) => (
-            <div key={i} className="why-card">
-              <span style={{ fontSize: 28, marginBottom: 14, display: 'block' }}>
-                {item.icon}
-              </span>
-              <h3 style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 17, fontWeight: 600,
-                color: 'var(--text)', marginBottom: 8,
-              }}>
-                {item.title}
-              </h3>
-              <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6 }}>
-                {item.desc}
-              </p>
+            <div key={i} className="why-card premium-card">
+              <span className="why-icon">{item.icon}</span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
       <style>{`
-        .why-card {
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: 14px; padding: 28px;
-          transition: border-color .25s, transform .2s;
+        .why-grid {
+          display: grid;
+          gap: 18px;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         }
-        .why-card:hover {
-          border-color: var(--border-h);
-          transform: translateY(-3px);
+        .why-card { padding: 28px; }
+        .why-icon {
+          align-items: center;
+          background: var(--cyan-soft);
+          border: 1px solid rgba(2,132,199,0.12);
+          border-radius: 12px;
+          display: flex;
+          font-size: 24px;
+          height: 44px;
+          justify-content: center;
+          margin-bottom: 18px;
+          width: 44px;
+        }
+        .why-card h3 {
+          color: var(--text);
+          font-family: var(--font-display);
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          margin-bottom: 10px;
+        }
+        .why-card p {
+          color: var(--muted);
+          font-size: 14px;
+          line-height: 1.7;
+        }
+        @media (max-width: 560px) {
+          .why-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </section>

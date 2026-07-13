@@ -18,14 +18,14 @@ export default function Nav() {
     <nav
       style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        borderBottom: `1px solid ${scrolled ? 'rgba(14,165,233,0.2)' : 'transparent'}`,
-        background: scrolled ? 'rgba(10,15,30,0.9)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(14px)' : 'none',
-        transition: 'all .3s ease',
+        borderBottom: `1px solid ${scrolled ? 'var(--border)' : 'transparent'}`,
+        background: scrolled ? 'rgba(255,255,255,0.82)' : 'rgba(255,255,255,0.46)',
+        backdropFilter: 'blur(18px)',
+        boxShadow: scrolled ? '0 10px 34px rgba(15,23,42,0.06)' : 'none',
+        transition: 'background var(--duration) var(--ease), border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease)',
       }}
     >
-      <div style={{
-        maxWidth: 1120, margin: '0 auto', padding: '0 24px',
+      <div className="section-shell nav-shell" style={{
         display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', height: 64,
       }}>
@@ -34,17 +34,17 @@ export default function Nav() {
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{
             width: 36, height: 36, borderRadius: 8,
-            background: 'var(--cyan)',
+            background: 'linear-gradient(135deg, var(--ink), var(--cyan))',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontFamily: 'var(--font-display)',
-            fontSize: 14, fontWeight: 700, color: 'var(--bg)',
+            fontSize: 14, fontWeight: 700, color: '#fff',
             letterSpacing: '-0.5px',
           }}>
             PG
           </div>
           <span style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 15, fontWeight: 600, color: 'var(--text)',
+            fontSize: 15, fontWeight: 700, color: 'var(--text)',
           }}>
             pgstudio<span style={{ color: 'var(--cyan-l)' }}>.tech</span>
           </span>
@@ -57,7 +57,7 @@ export default function Nav() {
             <Link
               key={link.href}
               href={link.href}
-              style={{ fontSize: 14, color: 'var(--muted)', textDecoration: 'none' }}
+              style={{ fontSize: 14, color: 'var(--muted)', textDecoration: 'none', transition: 'color .2s ease' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
             >
@@ -68,13 +68,19 @@ export default function Nav() {
             href="#contacto"
             style={{
               fontSize: 14, fontWeight: 600,
-              padding: '8px 18px', borderRadius: 10,
-              background: 'var(--cyan)', color: 'var(--bg)',
-              textDecoration: 'none', transition: 'background .2s',
+              padding: '9px 18px', borderRadius: 999,
+              background: 'var(--text)', color: '#fff',
+              textDecoration: 'none', transition: 'background var(--duration) var(--ease), transform var(--duration) var(--ease)',
               fontFamily: 'var(--font-display)',
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--cyan-l)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'var(--cyan)')}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'var(--cyan)'
+              e.currentTarget.style.transform = 'translateY(-1px)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'var(--text)'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
           >
             Empezar
           </Link>
@@ -86,7 +92,8 @@ export default function Nav() {
           aria-label="Abrir menú"
           style={{
             display: 'none', background: 'none',
-            border: 'none', cursor: 'pointer', padding: 4,
+            border: '1px solid var(--border)', cursor: 'pointer', padding: 8,
+            borderRadius: 10,
           }}
           className="hamburger-btn"
         >
@@ -95,7 +102,7 @@ export default function Nav() {
               display: 'block', width: 22, height: 2,
               background: 'var(--text)', borderRadius: 2,
               marginTop: i === 0 ? 0 : 5,
-              transition: '.25s',
+              transition: 'transform var(--duration) var(--ease), opacity var(--duration) var(--ease)',
             }} />
           ))}
         </button>
@@ -104,7 +111,7 @@ export default function Nav() {
       {/* Mobile menu */}
       {open && (
         <div style={{
-          background: 'var(--bg2)',
+          background: 'rgba(255,255,255,0.96)',
           borderBottom: '1px solid var(--border)',
           padding: '20px 24px',
           display: 'flex', flexDirection: 'column', gap: 20,
@@ -125,7 +132,7 @@ export default function Nav() {
             style={{
               fontSize: 15, fontWeight: 600,
               padding: '10px 18px', borderRadius: 10,
-              background: 'var(--cyan)', color: 'var(--bg)',
+              background: 'var(--text)', color: '#fff',
               textDecoration: 'none', textAlign: 'center',
               fontFamily: 'var(--font-display)',
             }}
@@ -139,6 +146,9 @@ export default function Nav() {
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
           .hamburger-btn { display: flex !important; flex-direction: column; }
+        }
+        @media (max-width: 420px) {
+          .nav-shell { height: 60px !important; }
         }
       `}</style>
     </nav>

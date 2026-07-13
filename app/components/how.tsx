@@ -2,58 +2,25 @@ import { HOW_STEPS } from '../lib/constants'
 
 export default function How() {
   return (
-    <section id="como" style={{ padding: '100px 0', background: 'var(--bg2)' }}>
-      <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-
+    <section id="como" className="section-space" style={{ background: 'var(--bg2)' }}>
+      <div className="section-shell">
         <div style={{ marginBottom: 56 }}>
-          <p style={{
-            fontSize: 12, fontWeight: 600, letterSpacing: '.12em',
-            color: 'var(--cyan)', textTransform: 'uppercase', marginBottom: 14,
-          }}>
-            El proceso
-          </p>
-          <h2 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(28px, 4vw, 44px)',
-            fontWeight: 700, letterSpacing: '-1px',
-            color: 'var(--text)', marginBottom: 16,
-          }}>
-            Empezar es simple
-          </h2>
-          <p style={{ fontSize: 17, color: 'var(--muted)', maxWidth: 520, lineHeight: 1.65 }}>
+          <p className="section-eyebrow">El proceso</p>
+          <h2 className="section-title">Empezar es simple</h2>
+          <p className="section-copy">
             Sin reuniones de horas ni contratos largos.
             Tres pasos y tu negocio en marcha.
           </p>
         </div>
 
-        <div style={{
-          border: '1px solid var(--border)',
-          borderRadius: 14, overflow: 'hidden',
-        }}>
-          <div className="steps-grid">
-            {HOW_STEPS.map((step, i) => (
-              <div key={i} className="step-item">
-                <span style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 48, fontWeight: 700, lineHeight: 1,
-                  color: 'rgba(14,165,233,0.12)',
-                  display: 'block', marginBottom: 20,
-                }}>
-                  {step.num}
-                </span>
-                <h3 style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 19, fontWeight: 600,
-                  color: 'var(--text)', marginBottom: 10,
-                }}>
-                  {step.title}
-                </h3>
-                <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.65 }}>
-                  {step.desc}
-                </p>
-              </div>
-            ))}
-          </div>
+        <div className="steps-grid premium-card">
+          {HOW_STEPS.map((step, i) => (
+            <div key={i} className="step-item">
+              <span>{step.num}</span>
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -61,19 +28,49 @@ export default function How() {
         .steps-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
+          overflow: hidden;
+        }
+        .steps-grid:hover {
+          box-shadow: var(--shadow-sm);
+          transform: none;
         }
         .step-item {
-          padding: 40px 32px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.68), rgba(255,255,255,0));
           border-right: 1px solid var(--border);
-          transition: background .2s;
+          padding: 42px 34px;
+          transition: background .22s var(--ease);
         }
         .step-item:last-child { border-right: none; }
-        .step-item:hover { background: rgba(14,165,233,0.03); }
+        .step-item:hover { background: rgba(14,165,233,0.045); }
+        .step-item span {
+          color: rgba(2,132,199,0.2);
+          display: block;
+          font-family: var(--font-display);
+          font-size: 54px;
+          font-weight: 700;
+          letter-spacing: -0.06em;
+          line-height: 1;
+          margin-bottom: 22px;
+        }
+        .step-item h3 {
+          color: var(--text);
+          font-family: var(--font-display);
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: -0.03em;
+          margin-bottom: 12px;
+        }
+        .step-item p {
+          color: var(--muted);
+          font-size: 14px;
+          line-height: 1.7;
+        }
         @media (max-width: 768px) {
           .steps-grid { grid-template-columns: 1fr; }
           .step-item {
-            border-right: none;
             border-bottom: 1px solid var(--border);
+            border-right: none;
+            padding: 34px 28px;
           }
           .step-item:last-child { border-bottom: none; }
         }
