@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { db } from '../../../lib/db'
-import { quotes, quoteItems } from '../../../lib/schema'
 import { eq } from 'drizzle-orm'
 import Link from 'next/link'
 import QuoteDetailClient from '../../../components/quote-detail-client'
+import { db } from '../../../lib/db'
+import { quoteItems, quotes } from '../../../lib/schema'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,26 +11,33 @@ export default async function QuoteDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { id }  = await params
-  const [quote] = await db.select().from(quotes).where(eq(quotes.id, Number(id)))
+  const { id } = await params
+  const quoteId = Number(id)
 
-  if (!quote) return (
-    <div style={{ padding: '32px', color: 'var(--text)' }}>
-      Cotización no encontrada. <Link href="/admin/cotizaciones">← Volver</Link>
-    </div>
-  )
+  if (!Number.isInteger(quoteId) || quoteId <= 0) {
+    return <QuoteNotFound />
+  }
+
+  const [quote] = await db.select().from(quotes).where(eq(quotes.id, quoteId))
+
+  if (!quote) return <QuoteNotFound />
 
   const items = await db.select().from(quoteItems)
-    .where(eq(quoteItems.quoteId, Number(id)))
+    .where(eq(quoteItems.quoteId, quoteId))
 
   return (
-    <div style={{ padding: '32px', background: 'var(--bg)', minHeight: '100vh' }}>
-      <div style={{ marginBottom: 24 }}>
-        <Link href="/admin/cotizaciones" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none' }}>
-          ← Cotizaciones
-        </Link>
-      </div>
-      <QuoteDetailClient quote={quote as any} items={items as any} />
-    </div>
+    <main className="admin-main">
+      <QuoteDetailClient quote={quote} items={items} />
+    </main>
+  )
+}
+
+function QuoteNotFound() {
+  return (
+    <main className="admin-main">
+      <section className="admin-card">
+        Cotizacion no encontrada. <Link href="/admin/cotizaciones">Volver</Link>
+      </section>
+    </main>
   )
 }

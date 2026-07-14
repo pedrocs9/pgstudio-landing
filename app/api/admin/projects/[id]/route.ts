@@ -1,12 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { db } from '../../../../lib/db'
 import { projects, projectPayments } from '../../../../lib/schema'
 import { eq, desc } from 'drizzle-orm'
+import { requireAdminSession, unauthorizedAdminResponse } from '../../../../lib/admin-auth'
+
+async function ensureAdmin() {
+  try {
+    await requireAdminSession()
+    return null
+  } catch {
+    return unauthorizedAdminResponse()
+  }
+}
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const unauthorized = await ensureAdmin()
+  if (unauthorized) return unauthorized
+
   const { id } = await params
   const [project] = await db.select().from(projects)
     .where(eq(projects.id, Number(id)))
@@ -22,6 +35,9 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const unauthorized = await ensureAdmin()
+  if (unauthorized) return unauthorized
+
   try {
     const { id } = await params
     const body   = await req.json()
@@ -40,7 +56,7 @@ export async function PATCH(
     }).where(eq(projects.id, Number(id)))
 
     return NextResponse.json({ ok: true })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Error al actualizar' }, { status: 500 })
   }
 }
@@ -49,6 +65,9 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const unauthorized = await ensureAdmin()
+  if (unauthorized) return unauthorized
+
   const { id } = await params
   await db.delete(projectPayments).where(eq(projectPayments.projectId, Number(id)))
   await db.delete(projects).where(eq(projects.id, Number(id)))

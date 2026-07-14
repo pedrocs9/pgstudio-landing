@@ -1,4 +1,5 @@
 import { PRODUCTS } from '../lib/constants'
+import VexorShowcase from './vexor-showcase'
 
 const productMessages = {
   vexor: {
@@ -65,23 +66,8 @@ export default function Products() {
             </div>
           </div>
 
-          <div className="featured-visual" aria-hidden>
-            <div className="mini-dashboard">
-              <div className="mini-header">
-                <strong>Resumen Vexor</strong>
-                <span>Hoy</span>
-              </div>
-              <div className="mini-chart">
-                {[42, 68, 54, 82, 74, 92, 64].map((height, index) => (
-                  <i key={index} style={{ height: `${height}%` }} />
-                ))}
-              </div>
-              <div className="mini-list">
-                <div><span>Caja abierta</span><strong>$428.900</strong></div>
-                <div><span>Productos vendidos</span><strong>126</strong></div>
-                <div><span>Reposición sugerida</span><strong>7 items</strong></div>
-              </div>
-            </div>
+          <div className="featured-visual" aria-label="Dashboard compacto de Vexor para Perfumeria Aurora">
+            <VexorShowcase variant="compact" />
           </div>
         </article>
 

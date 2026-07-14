@@ -1,12 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { vexorDb } from '../../../../../lib/vexor-db'
 import { sales, products, customers } from '../../../../../lib/vexor-schema'
 import { eq } from 'drizzle-orm'
+import { requireAdminSession, unauthorizedAdminResponse } from '../../../../../lib/admin-auth'
+
+async function ensureAdmin() {
+  try {
+    await requireAdminSession()
+    return null
+  } catch {
+    return unauthorizedAdminResponse()
+  }
+}
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const unauthorized = await ensureAdmin()
+  if (unauthorized) return unauthorized
+
   try {
     const { id } = await params
 
@@ -41,8 +54,7 @@ export async function GET(
       totalCustomers:   allCustomers.length,
       lastActivity:     lastSale?.createdAt ?? null,
     })
-  } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: 'Error al obtener métricas' }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Error al obtener metricas' }, { status: 500 })
   }
 }

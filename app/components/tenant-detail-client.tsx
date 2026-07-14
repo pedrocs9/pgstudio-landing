@@ -52,7 +52,7 @@ export default function TenantDetailClient({ tenant, users, modules, subscriptio
   const [resetLoading, setResetLoading]   = useState(false)
   const [payLoading, setPayLoading]       = useState(false)
   const [payForm, setPayForm]             = useState({
-    amount: '', currency: 'USD', method: 'transfer',
+    amount: '', currency: 'CLP', method: 'transfer',
     status: 'paid', period: '', note: '',
   })
 
@@ -102,7 +102,7 @@ export default function TenantDetailClient({ tenant, users, modules, subscriptio
     })
     setPayLoading(false)
     setShowPayForm(false)
-    setPayForm({ amount: '', currency: 'USD', method: 'transfer', status: 'paid', period: '', note: '' })
+    setPayForm({ amount: '', currency: 'CLP', method: 'transfer', status: 'paid', period: '', note: '' })
     const data = await fetch(`/api/admin/vexor/${tenant.id}/payments`).then(r => r.json())
     setPayments(data)
   }
@@ -299,7 +299,7 @@ export default function TenantDetailClient({ tenant, users, modules, subscriptio
               </div>
             </div>
             <div>
-              <label style={labelStyle}>Precio base (USD/mes)</label>
+              <label style={labelStyle}>Precio base (CLP/mes)</label>
               <input
                 type="number"
                 style={inputStyle}
@@ -608,7 +608,7 @@ export default function TenantDetailClient({ tenant, users, modules, subscriptio
                       color: "var(--success)",
                     }}
                   >
-                    ${Number(p.amount).toLocaleString("es-CL")} {p.currency}
+                    ${Number(p.amount).toLocaleString("es-CL")} CLP
                   </p>
                   <p style={{ fontSize: 11, color: "var(--muted)" }}>
                     {p.method}
@@ -692,7 +692,6 @@ export default function TenantDetailClient({ tenant, users, modules, subscriptio
                       setPayForm({ ...payForm, currency: e.target.value })
                     }
                   >
-                    <option value="USD">USD</option>
                     <option value="CLP">CLP</option>
                   </select>
                 </div>

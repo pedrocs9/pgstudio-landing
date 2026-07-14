@@ -28,7 +28,7 @@ export const clientPayments = pgTable('client_payments', {
   id:        serial('id').primaryKey(),
   tenantId:  integer('tenant_id').notNull(),
   amount:    decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  currency:  text('currency').notNull().default('USD'),
+  currency:  text('currency').notNull().default('CLP'),
   method:    text('method').notNull().default('transfer'),
   status:    text('status').notNull().default('paid'),
   period:    text('period'),
@@ -46,6 +46,7 @@ export const activityLogs = pgTable('activity_logs', {
 
 export const projects = pgTable('projects', {
   id:          serial('id').primaryKey(),
+  quoteId:     integer('quote_id'),
   name:        text('name').notNull(),
   clientName:  text('client_name').notNull(),
   type:        text('type').notNull().default('landing'),
@@ -72,6 +73,8 @@ export const projectPayments = pgTable('project_payments', {
 
 export const quotes = pgTable('quotes', {
   id:          serial('id').primaryKey(),
+  leadId:      integer('lead_id'),
+  projectId:   integer('project_id'),
   number:      text('number').notNull(),
   clientName:  text('client_name').notNull(),
   clientEmail: text('client_email'),

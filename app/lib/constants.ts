@@ -87,7 +87,7 @@ export const HOW_STEPS = [
 export const STATS = [
   { num: '3+',    label: 'Productos SaaS' },
   { num: '100%',  label: 'Integrado con SII' },
-  { num: '$12',   label: 'USD desde' },
+  { num: '$12.000', label: 'CLP desde' },
   { num: '24/7',  label: 'Soporte local' },
 ]
 

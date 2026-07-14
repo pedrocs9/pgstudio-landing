@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 import { db } from '../../lib/db'
 import { projects, projectPayments } from '../../lib/schema'
 import { desc } from 'drizzle-orm'
@@ -30,19 +30,7 @@ export default async function ProyectosPage() {
   const totalPaid      = allPayments.reduce((s, p) => s + Number(p.amount), 0)
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg)', padding: '0 0 80px' }}>
-
-      {/* Header */}
-      <div style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg2)', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/admin" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none' }}>← Admin</Link>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>Proyectos web</span>
-        </div>
-        <Link href="/admin/proyectos/nuevo" style={{ padding: '8px 18px', background: 'var(--cyan)', color: 'var(--bg)', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
-          + Nuevo proyecto
-        </Link>
-      </div>
-
+    <main className="admin-main">
       <div style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 24px' }}>
 
         {/* Stats */}
@@ -50,7 +38,7 @@ export default async function ProyectosPage() {
           {[
             { label: 'Total proyectos',   value: String(allProjects.length),          color: 'var(--text)' },
             { label: 'Activos',           value: String(activeProjects.length),        color: 'var(--success)' },
-            { label: 'MRR mantención',    value: `$${mrrProjects.toLocaleString('es-CL')} CLP`, color: 'var(--cyan)' },
+            { label: 'MRR mantencion',    value: `$${mrrProjects.toLocaleString('es-CL')} CLP`, color: 'var(--cyan)' },
             { label: 'Total cobrado',     value: `$${totalPaid.toLocaleString('es-CL')} CLP`,   color: 'var(--warning)' },
           ].map((s, i) => (
             <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 24px' }}>
@@ -73,7 +61,7 @@ export default async function ProyectosPage() {
             <tbody>
               {allProjects.length === 0 ? (
                 <tr><td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
-                  No hay proyectos aún. Crea el primero.
+                  No hay proyectos aun. Crea el primero.
                 </td></tr>
               ) : allProjects.map((p, i) => (
                 <tr key={p.id} style={{ borderBottom: i < allProjects.length - 1 ? '1px solid var(--border)' : 'none' }}>
@@ -84,7 +72,7 @@ export default async function ProyectosPage() {
                   <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--muted)' }}>{p.clientName}</td>
                   <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--muted)' }}>{TYPE_LABELS[p.type] ?? p.type}</td>
                   <td style={{ padding: '14px 16px', fontSize: 14, fontWeight: 700, color: 'var(--cyan)' }}>
-                    {Number(p.monthlyFee) > 0 ? `$${Number(p.monthlyFee).toLocaleString('es-CL')}` : '—'}
+                    {Number(p.monthlyFee) > 0 ? `$${Number(p.monthlyFee).toLocaleString('es-CL')}` : '-'}
                   </td>
                   <td style={{ padding: '14px 16px' }}>
                     <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 100, background: STATUS_LABELS[p.status]?.bg, color: STATUS_LABELS[p.status]?.color }}>
@@ -93,13 +81,13 @@ export default async function ProyectosPage() {
                   </td>
                   <td style={{ padding: '14px 16px' }}>
                     <div style={{ display: 'flex', gap: 8 }}>
-                      {p.repoUrl && <a href={p.repoUrl} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: 'var(--muted)', textDecoration: 'none' }}>📦 Repo</a>}
-                      {p.deployUrl && <a href={p.deployUrl} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: 'var(--muted)', textDecoration: 'none' }}>🚀 Deploy</a>}
+                      {p.repoUrl && <a href={p.repoUrl} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: 'var(--muted)', textDecoration: 'none' }}> Repo</a>}
+                      {p.deployUrl && <a href={p.deployUrl} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: 'var(--muted)', textDecoration: 'none' }}> Deploy</a>}
                     </div>
                   </td>
                   <td style={{ padding: '14px 16px' }}>
                     <Link href={`/admin/proyectos/${p.id}`} style={{ fontSize: 12, padding: '4px 12px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, color: 'var(--muted)', textDecoration: 'none' }}>
-                      Gestionar →
+                      Gestionar {'->'}
                     </Link>
                   </td>
                 </tr>

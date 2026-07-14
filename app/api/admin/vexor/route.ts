@@ -1,24 +1,31 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { vexorDb } from '../../../lib/vexor-db'
 import { tenants, users, tenantModules, tenantSubscriptions } from '../../../lib/vexor-schema'
 import bcrypt from 'bcryptjs'
+import { requireAdminSession, unauthorizedAdminResponse } from '../../../lib/admin-auth'
 
 const ALL_MODULES = [
   { module: 'pos',        price: '0',  label: 'POS básico' },
   { module: 'inventory',  price: '0',  label: 'Inventario' },
   { module: 'dashboard',  price: '0',  label: 'Dashboard' },
-  { module: 'suppliers',  price: '3',  label: 'Proveedores' },
-  { module: 'purchases',  price: '5',  label: 'Facturas de compra' },
-  { module: 'customers',  price: '3',  label: 'Clientes' },
-  { module: 'debts',      price: '5',  label: 'Deudas y fiado' },
-  { module: 'bread',      price: '3',  label: 'Módulo de pan' },
-  { module: 'containers', price: '3',  label: 'Envases' },
-  { module: 'reports',    price: '5',  label: 'Reportes' },
-  { module: 'cash',       price: '3',  label: 'Cierre de caja' },
-  { module: 'users',      price: '3',  label: 'Usuarios y roles' },
+  { module: 'suppliers',  price: '3000',  label: 'Proveedores' },
+  { module: 'purchases',  price: '5000',  label: 'Facturas de compra' },
+  { module: 'customers',  price: '3000',  label: 'Clientes' },
+  { module: 'debts',      price: '5000',  label: 'Deudas y fiado' },
+  { module: 'bread',      price: '3000',  label: 'Módulo de pan' },
+  { module: 'containers', price: '3000',  label: 'Envases' },
+  { module: 'reports',    price: '5000',  label: 'Reportes' },
+  { module: 'cash',       price: '3000',  label: 'Cierre de caja' },
+  { module: 'users',      price: '3000',  label: 'Usuarios y roles' },
 ]
 
 export async function POST(req: NextRequest) {
+  try {
+    await requireAdminSession()
+  } catch {
+    return unauthorizedAdminResponse()
+  }
+
   try {
     const body = await req.json()
     const { name, businessType, rut, phone, address, adminName, adminEmail, password, modules, basePrice, notes } = body
@@ -69,8 +76,7 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({ ok: true, tenantId: tenant.id })
-  } catch (error) {
-    console.error(error)
+  } catch {
     return NextResponse.json({ error: 'Error al crear cliente' }, { status: 500 })
   }
 }

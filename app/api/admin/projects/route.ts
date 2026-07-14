@@ -2,13 +2,26 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '../../../lib/db'
 import { projects } from '../../../lib/schema'
 import { desc } from 'drizzle-orm'
+import { requireAdminSession, unauthorizedAdminResponse } from '../../../lib/admin-auth'
 
 export async function GET() {
+  try {
+    await requireAdminSession()
+  } catch {
+    return unauthorizedAdminResponse()
+  }
+
   const data = await db.select().from(projects).orderBy(desc(projects.createdAt))
   return NextResponse.json(data)
 }
 
 export async function POST(req: NextRequest) {
+  try {
+    await requireAdminSession()
+  } catch {
+    return unauthorizedAdminResponse()
+  }
+
   try {
     const body = await req.json()
     const {
@@ -29,8 +42,7 @@ export async function POST(req: NextRequest) {
     }).returning()
 
     return NextResponse.json(project)
-  } catch (error) {
-    console.error(error)
+  } catch {
     return NextResponse.json({ error: 'Error al crear proyecto' }, { status: 500 })
   }
 }

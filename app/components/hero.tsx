@@ -1,6 +1,7 @@
 'use client'
 
 import { STATS } from '../lib/constants'
+import VexorShowcase from './vexor-showcase'
 
 export default function Hero() {
   return (
@@ -42,75 +43,7 @@ export default function Hero() {
             ))}
           </div>
         </div>
-
-        <div className="vexor-preview" aria-label="Vista previa visual de Vexor">
-          <div className="preview-window premium-card">
-            <div className="preview-topbar">
-              <div>
-                <strong>Vexor</strong>
-                <span>Punto de venta y gestión</span>
-              </div>
-              <span className="system-pill">Operando</span>
-            </div>
-
-            <div className="preview-body">
-              <aside className="preview-sidebar">
-                {['Venta', 'Inventario', 'Caja', 'Reportes'].map((item, index) => (
-                  <span key={item} className={index === 0 ? 'active' : ''}>{item}</span>
-                ))}
-              </aside>
-
-              <div className="preview-main">
-                <div className="metric-row">
-                  <div>
-                    <span>Ventas hoy</span>
-                    <strong>$428.900</strong>
-                  </div>
-                  <div>
-                    <span>Ticket promedio</span>
-                    <strong>$18.650</strong>
-                  </div>
-                  <div>
-                    <span>Stock bajo</span>
-                    <strong>7</strong>
-                  </div>
-                </div>
-
-                <div className="pos-panel">
-                  <div className="search-bar">Buscar producto por nombre, SKU o código</div>
-                  <div className="sale-list">
-                    {[
-                      ['Bebida 1.5L', '$1.990'],
-                      ['Pan corriente kg', '$2.450'],
-                      ['Tornillos zincados', '$3.200'],
-                    ].map(([name, price]) => (
-                      <div key={name}>
-                        <span>{name}</span>
-                        <strong>{price}</strong>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="inventory-alert">
-                  <span />
-                  12 productos necesitan reposición antes del próximo cierre.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="floating-card stock-card premium-card">
-            <span>Inventario</span>
-            <strong>Alertas de stock</strong>
-            <small>Evita perder ventas por falta de productos disponibles.</small>
-          </div>
-
-          <div className="floating-card cash-card premium-card">
-            <span>Cierre de caja</span>
-            <strong>Resumen diario listo</strong>
-          </div>
-        </div>
+        <VexorShowcase />
       </div>
 
       <style>{`

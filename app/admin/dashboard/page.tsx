@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { db } from '../../lib/db'
+﻿import { db } from '../../lib/db'
 import { clientPayments } from '../../lib/schema'
 import { vexorDb } from '../../lib/vexor-db'
 import { tenants, tenantSubscriptions } from '../../lib/vexor-schema'
@@ -20,7 +19,7 @@ export default async function FinancialDashboard() {
       const [sub] = await vexorDb
         .select()
         .from(tenantSubscriptions)
-        .where(eq(tenantSubscriptions.tenantId, t.id)); // ← sintaxis correcta
+        .where(eq(tenantSubscriptions.tenantId, t.id)); // <- sintaxis correcta
       return { ...t, sub: sub ?? null };
     }),
   );
@@ -64,36 +63,17 @@ export default async function FinancialDashboard() {
   })
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg)', padding: '0 0 80px' }}>
-
-      {/* Header */}
-      <div style={{
-        borderBottom: '1px solid var(--border)', background: 'var(--bg2)',
-        padding: '0 32px', display: 'flex', alignItems: 'center',
-        justifyContent: 'space-between', height: 64,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/admin" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none' }}>
-            ← Admin
-          </Link>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>
-            Dashboard financiero
-          </span>
-        </div>
-        <Link href="/admin/vexor" style={{ fontSize: 13, color: 'var(--cyan)', textDecoration: 'none' }}>
-          Ver clientes →
-        </Link>
-      </div>
+    <main className="admin-main">
 
       <div style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 24px' }}>
 
         {/* Stats principales */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 32 }}>
           {[
-          { label: 'MRR',                value: '$' + mrr.toLocaleString('es-CL') + ' CLP',                          color: 'var(--cyan)',    icon: '💰' },
-{ label: 'Cobrado este mes',   value: '$' + revenueThisMonth.toLocaleString('es-CL') + ' CLP',              color: 'var(--success)', icon: '✅' },
-{ label: 'Pendiente este mes', value: '$' + Math.max(0, pendingThisMonth).toLocaleString('es-CL') + ' CLP', color: pendingThisMonth > 0 ? 'var(--danger)' : 'var(--success)', icon: '⏳' },
-{ label: 'Clientes activos',   value: String(activeSubs.length),                                            color: 'var(--text)',    icon: '🏪' },
+          { label: 'MRR',                value: '$' + mrr.toLocaleString('es-CL') + ' CLP',                          color: 'var(--cyan)',    icon: '$' },
+{ label: 'Cobrado este mes',   value: '$' + revenueThisMonth.toLocaleString('es-CL') + ' CLP',              color: 'var(--success)', icon: 'OK' },
+{ label: 'Pendiente este mes', value: '$' + Math.max(0, pendingThisMonth).toLocaleString('es-CL') + ' CLP', color: pendingThisMonth > 0 ? 'var(--danger)' : 'var(--success)', icon: '...' },
+{ label: 'Clientes activos',   value: String(activeSubs.length),                                            color: 'var(--text)',    icon: '#' },
           ].map((s, i) => (
             <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -109,10 +89,10 @@ export default async function FinancialDashboard() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
 
-          {/* Gráfico ingresos últimos 6 meses */}
+          {/* Grafico ingresos ultimos 6 meses */}
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 20 }}>
-              Ingresos últimos 6 meses
+              Ingresos ultimos 6 meses
             </h2>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 140 }}>
               {last6Months.map((m, i) => (
@@ -135,13 +115,13 @@ export default async function FinancialDashboard() {
               <div>
                 <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 2 }}>Mes anterior</p>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: 'var(--text)' }}>
-                  ${revenueLastMonth} USD
+                  ${revenueLastMonth.toLocaleString('es-CL')} CLP
                 </p>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 2 }}>Este mes</p>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: 'var(--cyan)' }}>
-                  ${revenueThisMonth} USD
+                  ${revenueThisMonth.toLocaleString('es-CL')} CLP
                 </p>
               </div>
             </div>
@@ -150,7 +130,7 @@ export default async function FinancialDashboard() {
           {/* Clientes con pago pendiente */}
           <div style={{ background: 'var(--surface)', border: `1px solid ${pendingClients.length > 0 ? 'rgba(239,68,68,0.3)' : 'var(--border)'}`, borderRadius: 12, padding: '24px' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 16 }}>
-              {pendingClients.length > 0 ? '⚠️ Pagos pendientes este mes' : '✅ Todos al día este mes'}
+              {pendingClients.length > 0 ? '! Pagos pendientes este mes' : 'OK Todos al dia este mes'}
             </h2>
             {pendingClients.length === 0 ? (
               <p style={{ fontSize: 14, color: 'var(--muted)' }}>
@@ -166,10 +146,10 @@ export default async function FinancialDashboard() {
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--danger)' }}>
-                        ${Number(t.sub?.totalPrice ?? 0)} USD
+                        ${Number(t.sub?.totalPrice ?? 0).toLocaleString('es-CL')} CLP
                       </p>
                       <Link href={`/admin/vexor/${t.id}`} style={{ fontSize: 11, color: 'var(--cyan)', textDecoration: 'none' }}>
-                        Registrar pago →
+                        Registrar pago {'->'}
                       </Link>
                     </div>
                   </div>
@@ -211,15 +191,15 @@ export default async function FinancialDashboard() {
                       <p style={{ fontSize: 12, color: 'var(--muted)' }}>{t.businessType}</p>
                     </td>
                     <td style={{ padding: '14px 16px', fontSize: 14, fontWeight: 700, color: 'var(--cyan)' }}>
-                      ${Number(t.sub?.totalPrice ?? 0)} USD
+                      ${Number(t.sub?.totalPrice ?? 0).toLocaleString('es-CL')} CLP
                     </td>
                     <td style={{ padding: '14px 16px' }}>
                       <span style={{ fontSize: 14, fontWeight: 600, color: isPaid ? 'var(--success)' : 'var(--danger)' }}>
-                        ${paidThisMonth} USD
+                        ${paidThisMonth.toLocaleString('es-CL')} CLP
                       </span>
                       {!isPaid && t.sub?.status === 'active' && (
                         <p style={{ fontSize: 11, color: 'var(--danger)' }}>
-                          Falta ${Number(t.sub?.totalPrice ?? 0) - paidThisMonth} USD
+                          Falta ${(Number(t.sub?.totalPrice ?? 0) - paidThisMonth).toLocaleString('es-CL')} CLP
                         </p>
                       )}
                     </td>
@@ -229,12 +209,12 @@ export default async function FinancialDashboard() {
                         background: t.sub?.status === 'active' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
                         color: t.sub?.status === 'active' ? 'var(--success)' : 'var(--danger)',
                       }}>
-                        {t.sub?.status === 'active' ? 'Activo' : t.sub?.status === 'suspended' ? 'Suspendido' : 'Sin suscripción'}
+                        {t.sub?.status === 'active' ? 'Activo' : t.sub?.status === 'suspended' ? 'Suspendido' : 'Sin suscripcion'}
                       </span>
                     </td>
                     <td style={{ padding: '14px 16px' }}>
                       <Link href={`/admin/vexor/${t.id}`} style={{ fontSize: 12, padding: '4px 12px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, color: 'var(--muted)', textDecoration: 'none' }}>
-                        Gestionar →
+                        Gestionar {'->'}
                       </Link>
                     </td>
                   </tr>
@@ -244,17 +224,17 @@ export default async function FinancialDashboard() {
           </table>
         </div>
 
-        {/* Últimos pagos */}
+        {/* Ultimos pagos */}
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
           <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>
-              Últimos pagos recibidos
+              Ultimos pagos recibidos
             </h2>
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Cliente', 'Monto', 'Método', 'Período', 'Fecha'].map(h => (
+                {['Cliente', 'Monto', 'Metodo', 'Periodo', 'Fecha'].map(h => (
                   <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.06em' }}>{h}</th>
                 ))}
               </tr>
@@ -262,7 +242,7 @@ export default async function FinancialDashboard() {
             <tbody>
               {allPayments.length === 0 ? (
                 <tr><td colSpan={5} style={{ padding: '48px', textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
-                  Sin pagos registrados aún.
+                  Sin pagos registrados aun.
                 </td></tr>
               ) : allPayments.slice(0, 10).map((p, i) => {
                 const tenant = subsData.find(t => t.id === p.tenantId)
@@ -272,13 +252,13 @@ export default async function FinancialDashboard() {
                       {tenant?.name ?? `Cliente #${p.tenantId}`}
                     </td>
                     <td style={{ padding: '14px 16px', fontSize: 14, fontWeight: 700, color: 'var(--success)' }}>
-                      ${Number(p.amount).toLocaleString('es-CL')} {p.currency}
+                      ${Number(p.amount).toLocaleString('es-CL')} CLP
                     </td>
                     <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--muted)' }}>
                       {p.method}
                     </td>
                     <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--muted)' }}>
-                      {p.period ?? '—'}
+                      {p.period ?? '-'}
                     </td>
                     <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--muted)' }}>
                       {new Date(p.createdAt!).toLocaleDateString('es-CL')}

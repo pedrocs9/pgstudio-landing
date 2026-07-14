@@ -2,6 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import VexorShowcase, {
+  ConnectedFlowPanel,
+  CustomerPanel,
+  DashboardPanel,
+  InventoryPanel,
+  PosPanel,
+  PurchasePanel,
+} from '../components/vexor-showcase'
 
 const contactHref = '/#contacto'
 
@@ -25,8 +33,6 @@ const modules = [
     value: 'Pendiente de recepcion',
   },
 ]
-
-const flow = ['Venta', 'Stock', 'Cliente', 'Caja', 'Reportes']
 
 export default function VexorLandingClient() {
   const [open, setOpen] = useState(false)
@@ -108,7 +114,7 @@ export default function VexorLandingClient() {
               </div>
             </div>
 
-            <PosMockup />
+            <VexorShowcase />
           </div>
         </section>
 
@@ -140,7 +146,7 @@ export default function VexorLandingClient() {
             </div>
 
             <div className="pos-showcase premium-card">
-              <PosMockup compact />
+              <PosPanel />
               <div className="pos-callouts">
                 <article>
                   <span>01</span>
@@ -186,14 +192,14 @@ export default function VexorLandingClient() {
               ))}
             </div>
 
-            <div className="flow-panel">
-              {flow.map((item, index) => (
-                <div key={item} className="flow-step">
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <strong>{item}</strong>
-                </div>
-              ))}
+            <div className="module-evidence-grid">
+              <DashboardPanel compact />
+              <InventoryPanel />
+              <CustomerPanel />
+              <PurchasePanel />
             </div>
+
+            <ConnectedFlowPanel />
           </div>
         </section>
 
@@ -805,53 +811,5 @@ export default function VexorLandingClient() {
         }
       `}</style>
     </>
-  )
-}
-
-function PosMockup({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`pos-mockup ${compact ? 'compact' : ''}`} aria-label="Mockup fiel del punto de venta Vexor">
-      <div className="pos-topbar">
-        <div>
-          <strong>Vexor POS</strong>
-          <span>Venta de mostrador</span>
-        </div>
-        <span className="pos-status">Caja abierta</span>
-      </div>
-      <div className="pos-body">
-        <div>
-          <div className="pos-search">Buscar por nombre, SKU o barcode</div>
-          <div className="pos-products">
-            <div><span>SKU 1842</span><strong>Bebida 1.5L</strong></div>
-            <div><span>Stock 12</span><strong>Pan corriente kg</strong></div>
-            <div><span>Barcode listo</span><strong>Arroz grado 1</strong></div>
-            <div><span>Stock bajo</span><strong>Aceite maravilla</strong></div>
-          </div>
-          <div className="pos-keypad" aria-hidden="true">
-            {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((key) => (
-              <span key={key}>{key}</span>
-            ))}
-          </div>
-        </div>
-        <div className="pos-cart">
-          <div className="pos-cart-row">
-            <div><span>Cliente</span><strong>Venta mostrador</strong></div>
-            <strong>Editar</strong>
-          </div>
-          <div className="pos-cart-row">
-            <div><span>Carrito</span><strong>3 productos</strong></div>
-            <strong>-$500</strong>
-          </div>
-          <div className="pos-cart-row">
-            <div><span>Medio de pago</span><strong>Efectivo</strong></div>
-            <strong>Fiado opcional</strong>
-          </div>
-          <div className="pos-total">
-            <span>Total visible</span>
-            <strong>$12.840</strong>
-          </div>
-        </div>
-      </div>
-    </div>
   )
 }

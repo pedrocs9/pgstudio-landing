@@ -1,216 +1,226 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-const inputStyle: any = {
-  padding: '10px 14px', background: 'var(--bg)',
-  border: '1px solid var(--border)', borderRadius: 8,
-  color: 'var(--text)', fontSize: 14, outline: 'none', width: '100%',
-}
-
-const labelStyle: any = {
-  fontSize: 12, color: 'var(--muted)', display: 'block', marginBottom: 6,
-}
+import { calculateQuoteTotal, formatQuoteMoney } from '../lib/quote-pipeline'
+import { getLeadProductLabel, type LeadRecord } from '../lib/lead-pipeline'
 
 type Item = {
   description: string
-  detail:      string
-  qty:         number
-  unitPrice:   number
-  subtotal:    number
+  detail: string
+  qty: number
+  unitPrice: number
+}
+
+type Props = {
+  leads: LeadRecord[]
+  initialLeadId?: number | null
 }
 
 const TEMPLATES = [
-  { label: 'Landing básica',    items: [{ description: 'Desarrollo landing page', detail: 'Diseño, desarrollo y deploy. 5 secciones.', qty: 1, unitPrice: 200000, subtotal: 200000 }, { description: 'Mantención mensual', detail: 'Hosting, dominio y soporte.', qty: 1, unitPrice: 20000, subtotal: 20000 }] },
-  { label: 'Vexor básico',      items: [{ description: 'Suscripción Vexor - Plan base', detail: 'POS + Inventario + Dashboard', qty: 1, unitPrice: 13000, subtotal: 13000 }] },
-  { label: 'Proyecto a medida', items: [{ description: 'Análisis y diseño', detail: 'Levantamiento de requerimientos y wireframes.', qty: 1, unitPrice: 150000, subtotal: 150000 }, { description: 'Desarrollo', detail: 'Implementación completa del sistema.', qty: 1, unitPrice: 500000, subtotal: 500000 }] },
+  {
+    label: 'Landing comercial',
+    items: [
+      { description: 'Diseno y desarrollo landing page', detail: 'Estructura, frontend responsive y deploy inicial.', qty: 1, unitPrice: 200000 },
+      { description: 'Mantencion mensual', detail: 'Soporte, ajustes menores y monitoreo base.', qty: 1, unitPrice: 20000 },
+    ],
+  },
+  {
+    label: 'Vexor base',
+    items: [
+      { description: 'Implementacion Vexor', detail: 'Configuracion inicial, POS, inventario y capacitacion.', qty: 1, unitPrice: 13000 },
+    ],
+  },
+  {
+    label: 'Software a medida',
+    items: [
+      { description: 'Discovery y diseno funcional', detail: 'Levantamiento, flujo principal y alcance de primera version.', qty: 1, unitPrice: 150000 },
+      { description: 'Desarrollo de plataforma', detail: 'Implementacion, pruebas y salida a produccion.', qty: 1, unitPrice: 500000 },
+    ],
+  },
 ]
 
-export default function NewQuoteClient() {
+export default function NewQuoteClient({ leads, initialLeadId = null }: Props) {
   const router = useRouter()
-  const [loading, setLoading]   = useState(false)
-  const [form, setForm]         = useState({
-    clientName: '', clientEmail: '', clientPhone: '',
-    validDays: '15', currency: 'CLP', notes: '',
+  const initialLead = leads.find(lead => lead.id === initialLeadId) ?? null
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [form, setForm] = useState({
+    leadId: initialLead?.id ? String(initialLead.id) : '',
+    clientName: initialLead?.name ?? '',
+    clientEmail: initialLead?.email ?? '',
+    clientPhone: '',
+    validDays: '15',
+    currency: 'CLP',
+    notes: initialLead ? `Interes: ${getLeadProductLabel(initialLead.product)}. ${initialLead.message ?? ''}` : '',
   })
-  const [items, setItems] = useState<Item[]>([{
-    description: '', detail: '', qty: 1, unitPrice: 0, subtotal: 0,
-  }])
+  const [items, setItems] = useState<Item[]>([
+    { description: '', detail: '', qty: 1, unitPrice: 0 },
+  ])
 
-  const total = items.reduce((s, i) => s + i.subtotal, 0)
+  const total = useMemo(() => calculateQuoteTotal(items), [items])
 
-  function addItem() {
-    setItems([...items, { description: '', detail: '', qty: 1, unitPrice: 0, subtotal: 0 }])
+  function selectLead(leadId: string) {
+    const lead = leads.find(item => String(item.id) === leadId)
+    setForm(current => ({
+      ...current,
+      leadId,
+      clientName: lead?.name ?? current.clientName,
+      clientEmail: lead?.email ?? current.clientEmail,
+      notes: lead ? `Interes: ${getLeadProductLabel(lead.product)}. ${lead.message ?? ''}` : current.notes,
+    }))
+  }
+
+  function updateItem(index: number, patch: Partial<Item>) {
+    setItems(current => current.map((item, itemIndex) => (
+      itemIndex === index ? { ...item, ...patch } : item
+    )))
   }
 
   function removeItem(index: number) {
-    setItems(items.filter((_, i) => i !== index))
+    setItems(current => current.length === 1 ? current : current.filter((_, itemIndex) => itemIndex !== index))
   }
 
-  function updateItem(index: number, field: string, value: any) {
-    const updated = items.map((item, i) => {
-      if (i !== index) return item
-      const newItem = { ...item, [field]: value }
-      if (field === 'qty' || field === 'unitPrice') {
-        newItem.subtotal = Number(newItem.qty) * Number(newItem.unitPrice)
-      }
-      return newItem
-    })
-    setItems(updated)
-  }
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setError('')
 
-  function applyTemplate(templateItems: any[]) {
-    setItems(templateItems)
-  }
+    if (!form.clientName.trim()) {
+      setError('El nombre del cliente es obligatorio.')
+      return
+    }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (items.some(i => !i.description)) return
+    if (items.some(item => !item.description.trim() || item.qty <= 0 || item.unitPrice < 0)) {
+      setError('Revisa los items: descripcion, cantidad y precio deben ser validos.')
+      return
+    }
+
     setLoading(true)
-    const res = await fetch('/api/admin/quotes', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ ...form, items }),
-    })
-    const data = await res.json()
-    setLoading(false)
-    if (data.ok) router.push(`/admin/cotizaciones/${data.id}`)
+    try {
+      const res = await fetch('/api/admin/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, leadId: form.leadId || null, items }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error || 'No se pudo crear la cotizacion.')
+      router.push(`/admin/cotizaciones/${data.id}`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo crear la cotizacion.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <form className="quote-form" onSubmit={handleSubmit}>
+      {error && <p className="quote-form-error" role="alert">{error}</p>}
 
-      {/* Templates rápidos */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 24px' }}>
-        <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12 }}>Templates rápidos</p>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {TEMPLATES.map(t => (
-            <button key={t.label} type="button" onClick={() => applyTemplate(t.items)} style={{
-              padding: '7px 14px', borderRadius: 8, fontSize: 13,
-              border: '1px solid var(--border)', background: 'transparent',
-              color: 'var(--cyan)', cursor: 'pointer',
-            }}>
-              {t.label}
+      <section className="admin-card quote-form-section">
+        <header>
+          <p>Cliente</p>
+          <h2>Datos comerciales</h2>
+        </header>
+        <div className="quote-form-grid">
+          <label>
+            <span>Lead relacionado</span>
+            <select className="input-surface" value={form.leadId} onChange={event => selectLead(event.target.value)}>
+              <option value="">Sin lead relacionado</option>
+              {leads.map(lead => (
+                <option key={lead.id} value={lead.id}>{lead.name || lead.email} · {getLeadProductLabel(lead.product)}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Nombre del cliente *</span>
+            <input className="input-surface" required value={form.clientName} onChange={event => setForm({ ...form, clientName: event.target.value })} />
+          </label>
+          <label>
+            <span>Email</span>
+            <input className="input-surface" type="email" value={form.clientEmail} onChange={event => setForm({ ...form, clientEmail: event.target.value })} />
+          </label>
+          <label>
+            <span>Telefono</span>
+            <input className="input-surface" value={form.clientPhone} onChange={event => setForm({ ...form, clientPhone: event.target.value })} />
+          </label>
+        </div>
+      </section>
+
+      <section className="admin-card quote-form-section">
+        <header>
+          <p>Propuesta</p>
+          <h2>Alcance y condiciones</h2>
+        </header>
+        <div className="quote-form-grid">
+          <label>
+            <span>Moneda</span>
+            <input className="input-surface" value="CLP" readOnly />
+          </label>
+          <label>
+            <span>Validez en dias</span>
+            <input className="input-surface" type="number" min="1" max="365" value={form.validDays} onChange={event => setForm({ ...form, validDays: event.target.value })} />
+          </label>
+          <label className="quote-form-wide">
+            <span>Notas y condiciones visibles en PDF</span>
+            <textarea className="input-surface" rows={4} value={form.notes} onChange={event => setForm({ ...form, notes: event.target.value })} />
+          </label>
+        </div>
+      </section>
+
+      <section className="admin-card quote-form-section">
+        <header className="quote-form-toolbar">
+          <div>
+            <p>Items economicos</p>
+            <h2>Servicios cotizados</h2>
+          </div>
+          <button type="button" onClick={() => setItems(current => [...current, { description: '', detail: '', qty: 1, unitPrice: 0 }])}>Agregar item</button>
+        </header>
+
+        <div className="quote-template-row">
+          {TEMPLATES.map(template => (
+            <button key={template.label} type="button" onClick={() => setItems(template.items)}>
+              {template.label}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Datos del cliente */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 16 }}>
-          Datos del cliente
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          <div style={{ gridColumn: '1 / -1' }}>
-            <label style={labelStyle}>Nombre del cliente *</label>
-            <input required style={inputStyle} value={form.clientName}
-              onChange={e => setForm({ ...form, clientName: e.target.value })} />
-          </div>
-          <div>
-            <label style={labelStyle}>Email</label>
-            <input type="email" style={inputStyle} value={form.clientEmail}
-              onChange={e => setForm({ ...form, clientEmail: e.target.value })} />
-          </div>
-          <div>
-            <label style={labelStyle}>Teléfono</label>
-            <input style={inputStyle} value={form.clientPhone}
-              onChange={e => setForm({ ...form, clientPhone: e.target.value })} />
-          </div>
-          <div>
-            <label style={labelStyle}>Moneda</label>
-            <select style={inputStyle} value={form.currency}
-              onChange={e => setForm({ ...form, currency: e.target.value })}>
-              <option value="CLP">CLP</option>
-              <option value="USD">USD</option>
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Válida por (días)</label>
-            <input type="number" style={inputStyle} value={form.validDays}
-              onChange={e => setForm({ ...form, validDays: e.target.value })} />
-          </div>
-        </div>
-      </div>
-
-      {/* Items */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, color: 'var(--text)' }}>
-            Servicios
-          </h2>
-          <button type="button" onClick={addItem} style={{ padding: '6px 14px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, color: 'var(--cyan)', fontSize: 13, cursor: 'pointer' }}>
-            + Agregar item
-          </button>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="quote-items-editor">
           {items.map((item, index) => (
-            <div key={index} style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr 1fr auto', gap: 8, alignItems: 'flex-end' }}>
-                <div>
-                  <label style={labelStyle}>Descripción *</label>
-                  <input required style={inputStyle} value={item.description}
-                    placeholder="Ej: Desarrollo landing page"
-                    onChange={e => updateItem(index, 'description', e.target.value)} />
-                </div>
-                <div>
-                  <label style={labelStyle}>Cantidad</label>
-                  <input type="number" min="1" style={inputStyle} value={item.qty}
-                    onChange={e => updateItem(index, 'qty', Number(e.target.value))} />
-                </div>
-                <div>
-                  <label style={labelStyle}>Precio unit.</label>
-                  <input type="number" style={inputStyle} value={item.unitPrice}
-                    onChange={e => updateItem(index, 'unitPrice', Number(e.target.value))} />
-                </div>
-                <div>
-                  <label style={labelStyle}>Subtotal</label>
-                  <div style={{ ...inputStyle, background: 'var(--surface)', color: 'var(--muted)' }}>
-                    ${item.subtotal.toLocaleString('es-CL')}
-                  </div>
-                </div>
-                <button type="button" onClick={() => removeItem(index)} style={{ padding: '10px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--danger)', cursor: 'pointer' }}>
-                  ✕
-                </button>
+            <article key={index} className="quote-item-row">
+              <label>
+                <span>Descripcion *</span>
+                <input className="input-surface" value={item.description} onChange={event => updateItem(index, { description: event.target.value })} />
+              </label>
+              <label>
+                <span>Cantidad</span>
+                <input className="input-surface" type="number" min="1" value={item.qty} onChange={event => updateItem(index, { qty: Number(event.target.value) })} />
+              </label>
+              <label>
+                <span>Valor unitario</span>
+                <input className="input-surface" type="number" min="0" value={item.unitPrice} onChange={event => updateItem(index, { unitPrice: Number(event.target.value) })} />
+              </label>
+              <div>
+                <span>Subtotal</span>
+                <strong>{formatQuoteMoney(Math.max(1, item.qty) * Math.max(0, item.unitPrice), form.currency)}</strong>
               </div>
-              <div style={{ marginTop: 8 }}>
-                <input style={{ ...inputStyle, fontSize: 12 }} value={item.detail}
-                  placeholder="Detalle opcional (aparece en el PDF)"
-                  onChange={e => updateItem(index, 'detail', e.target.value)} />
-              </div>
-            </div>
+              <button type="button" onClick={() => removeItem(index)} disabled={items.length === 1}>Eliminar</button>
+              <label className="quote-item-detail">
+                <span>Detalle opcional</span>
+                <input className="input-surface" value={item.detail} onChange={event => updateItem(index, { detail: event.target.value })} />
+              </label>
+            </article>
           ))}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14, padding: '12px 16px', background: 'var(--bg2)', borderRadius: 10 }}>
-          <span style={{ fontSize: 14, color: 'var(--muted)', marginRight: 16 }}>Total</span>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: 'var(--cyan)' }}>
-            ${total.toLocaleString('es-CL')} {form.currency}
-          </span>
+        <div className="quote-total-panel">
+          <span>Total</span>
+          <strong>{formatQuoteMoney(total, form.currency)}</strong>
         </div>
-      </div>
+      </section>
 
-      {/* Notas */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 16 }}>
-          Notas (aparecen en el PDF)
-        </h2>
-        <textarea rows={3} style={{ ...inputStyle, resize: 'vertical' }} value={form.notes}
-          placeholder="Condiciones, formas de pago, observaciones..."
-          onChange={e => setForm({ ...form, notes: e.target.value })} />
-      </div>
-
-      {/* Botones */}
-      <div style={{ display: 'flex', gap: 10 }}>
-        <button type="button" onClick={() => router.push('/admin/cotizaciones')} style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 10, color: 'var(--muted)', fontSize: 14, cursor: 'pointer' }}>
-          Cancelar
-        </button>
-        <button type="submit" disabled={loading} style={{ flex: 2, padding: '12px', background: 'var(--cyan)', color: 'var(--bg)', border: 'none', borderRadius: 10, fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, cursor: loading ? 'wait' : 'pointer' }}>
-          {loading ? 'Guardando...' : 'Crear cotización →'}
-        </button>
+      <div className="quote-form-actions">
+        <button type="button" onClick={() => router.push('/admin/cotizaciones')}>Cancelar</button>
+        <button type="submit" disabled={loading}>{loading ? 'Guardando...' : 'Crear cotizacion'}</button>
       </div>
     </form>
   )

@@ -1,23 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server'
+import {
+  ADMIN_SESSION_COOKIE,
+  createAdminSessionToken,
+  getAdminCookieOptions,
+  hasAdminAuthConfig,
+  isValidAdminPassword,
+} from '../../../lib/admin-session'
 
 export async function POST(req: NextRequest) {
-  const { password } = await req.json()
+  let password: unknown
 
-  console.log('password recibida:', password)
-  console.log('password esperada:', process.env.ADMIN_PASSWORD)
+  try {
+    const body = await req.json()
+    password = body?.password
+  } catch {
+    return NextResponse.json({ error: 'Solicitud invalida.' }, { status: 400 })
+  }
 
-  if (password !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!hasAdminAuthConfig()) {
+    console.error('Configuracion de autenticacion administrativa incompleta.')
+    return NextResponse.json({ error: 'No se pudo iniciar sesion.' }, { status: 500 })
+  }
+
+  if (!(await isValidAdminPassword(password))) {
+    console.warn('Intento de acceso administrativo rechazado.')
+    return NextResponse.json({ error: 'Credenciales incorrectas.' }, { status: 401 })
   }
 
   const res = NextResponse.json({ ok: true })
+  const token = await createAdminSessionToken()
 
-  res.cookies.set('admin_auth', process.env.ADMIN_PASSWORD!, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 * 7,
-    path: '/',
-  })
+  res.cookies.set(ADMIN_SESSION_COOKIE, token, getAdminCookieOptions())
 
   return res
 }

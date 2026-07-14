@@ -1,12 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { db } from '../../../../../lib/db'
 import { projectPayments } from '../../../../../lib/schema'
-import { eq, desc } from 'drizzle-orm'
+import { requireAdminSession, unauthorizedAdminResponse } from '../../../../../lib/admin-auth'
+
+async function ensureAdmin() {
+  try {
+    await requireAdminSession()
+    return null
+  } catch {
+    return unauthorizedAdminResponse()
+  }
+}
 
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const unauthorized = await ensureAdmin()
+  if (unauthorized) return unauthorized
+
   try {
     const { id }                       = await params
     const { amount, currency, type, note } = await req.json()
@@ -20,7 +32,7 @@ export async function POST(
     }).returning()
 
     return NextResponse.json(payment)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Error al registrar pago' }, { status: 500 })
   }
 }

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -11,6 +11,8 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (loading) return
+
     setLoading(true)
     setError(false)
 
@@ -19,6 +21,8 @@ export default function LoginPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password }),
     })
+
+    setPassword('')
 
     if (res.ok) {
       router.push('/admin')
@@ -65,11 +69,15 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <input
+            id="admin-password"
             type="password"
-            placeholder="Contraseña"
+            placeholder="Contrasena"
+            aria-label="Contrasena administrativa"
+            autoComplete="current-password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
+            disabled={loading}
             style={{
               padding: '12px 16px',
               background: 'var(--bg2)',
@@ -81,7 +89,7 @@ export default function LoginPage() {
           />
           {error && (
             <p style={{ fontSize: 13, color: '#ef4444', textAlign: 'center' }}>
-              Contraseña incorrecta
+              Credenciales incorrectas.
             </p>
           )}
           <button

@@ -219,7 +219,7 @@ export default function ProjectDetailClient({ project, payments }: {
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--bg2)', borderRadius: 8, border: '1px solid var(--border)' }}>
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>
-                    ${Number(p.amount).toLocaleString('es-CL')} {p.currency}
+                    ${Number(p.amount).toLocaleString('es-CL')} CLP
                   </p>
                   <p style={{ fontSize: 11, color: 'var(--muted)' }}>
                     {p.type === 'monthly' ? 'Mantención' : 'Desarrollo'}{p.note && ` · ${p.note}`}
@@ -261,7 +261,6 @@ export default function ProjectDetailClient({ project, payments }: {
                   <select style={inputStyle} value={payForm.currency}
                     onChange={e => setPayForm({ ...payForm, currency: e.target.value })}>
                     <option value="CLP">CLP</option>
-                    <option value="USD">USD</option>
                   </select>
                 </div>
               </div>

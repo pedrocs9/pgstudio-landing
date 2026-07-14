@@ -2,6 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+## Admin authentication
+
+The internal admin panel uses a signed, httpOnly session cookie. Configure both
+environment variables before using `/admin`:
+
+- `ADMIN_PASSWORD`: password accepted by the admin login form.
+- `ADMIN_SESSION_SECRET`: random secret used to sign 12-hour admin sessions.
+
+Do not commit real values. Local `.env*` files are ignored by Git.
+
 First, run the development server:
 
 ```bash

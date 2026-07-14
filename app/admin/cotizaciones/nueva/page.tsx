@@ -1,15 +1,28 @@
+import { desc } from 'drizzle-orm'
+import AdminPageHeader from '../../../components/admin-page-header'
 import NewQuoteClient from '../../../components/new-quote-client'
+import { db } from '../../../lib/db'
+import { leads } from '../../../lib/schema'
 
-export default function NuevaCotizacionPage() {
+export const dynamic = 'force-dynamic'
+
+export default async function NuevaCotizacionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ leadId?: string }>
+}) {
+  const params = await searchParams
+  const allLeads = await db.select().from(leads).orderBy(desc(leads.createdAt))
+  const leadId = params.leadId ? Number(params.leadId) : null
+
   return (
-    <div style={{ padding: '32px', background: 'var(--bg)', minHeight: '100vh', maxWidth: 800, margin: '0 auto' }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
-        Nueva cotización
-      </h1>
-      <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 32 }}>
-        Crea una cotización profesional y descárgala como PDF.
-      </p>
-      <NewQuoteClient />
-    </div>
+    <main className="admin-main">
+      <AdminPageHeader
+        eyebrow="Cotizaciones"
+        title="Nueva cotizacion"
+        description="Prepara una propuesta comercial clara, con items validados, validez y relacion opcional con un lead."
+      />
+      <NewQuoteClient leads={allLeads} initialLeadId={Number.isInteger(leadId) ? leadId : null} />
+    </main>
   )
 }

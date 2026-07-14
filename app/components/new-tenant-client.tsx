@@ -330,7 +330,7 @@ export default function NewTenantClient() {
           }}
         >
           <div>
-            <label style={labelStyle}>Precio base (USD/mes) *</label>
+            <label style={labelStyle}>Precio base (CLP/mes) *</label>
             <input
               required
               type="number"

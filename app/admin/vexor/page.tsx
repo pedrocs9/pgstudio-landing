@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { vexorDb } from '../../lib/vexor-db'
+﻿import { vexorDb } from '../../lib/vexor-db'
 import { tenants, tenantSubscriptions, tenantModules, users } from '../../lib/vexor-schema'
 import { eq } from 'drizzle-orm'
 import Link from 'next/link'
@@ -29,33 +28,7 @@ export default async function VexorTenantsPage() {
   const suspendedCount = tenantsWithData.filter(t => t.sub?.status === 'suspended').length
 
   return (
-    <div style={{ padding: '32px', background: 'var(--bg)', minHeight: '100vh' }}>
-
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Link href="/admin" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none' }}>
-              ← Admin
-            </Link>
-          </div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
-            Clientes Vexor
-          </h1>
-          <p style={{ fontSize: 14, color: 'var(--muted)' }}>
-            {tenantsWithData.length} negocios registrados
-          </p>
-        </div>
-        <Link href="/admin/vexor/nuevo" style={{
-          padding: '10px 20px', background: 'var(--cyan)',
-          color: 'var(--bg)', borderRadius: 8,
-          fontFamily: 'var(--font-display)',
-          fontSize: 14, fontWeight: 600,
-          textDecoration: 'none',
-        }}>
-          + Nuevo cliente
-        </Link>
-      </div>
+    <main className="admin-main">
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
@@ -76,7 +49,7 @@ export default async function VexorTenantsPage() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              {['Negocio', 'Tipo', 'Usuarios', 'Módulos', 'MRR', 'Estado', 'Acciones'].map(h => (
+              {['Negocio', 'Tipo', 'Usuarios', 'Modulos', 'MRR', 'Estado', 'Acciones'].map(h => (
                 <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.06em' }}>{h}</th>
               ))}
             </tr>
@@ -84,7 +57,7 @@ export default async function VexorTenantsPage() {
           <tbody>
             {tenantsWithData.length === 0 ? (
               <tr><td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
-                Aún no hay clientes. Crea el primero.
+                Aun no hay clientes. Crea el primero.
               </td></tr>
             ) : tenantsWithData.map((t, i) => (
               <tr key={t.id} style={{ borderBottom: i < tenantsWithData.length - 1 ? '1px solid var(--border)' : 'none' }}>
@@ -102,7 +75,7 @@ export default async function VexorTenantsPage() {
                   {t.activeModules}
                 </td>
                 <td style={{ padding: '14px 16px', fontSize: 14, fontWeight: 700, color: 'var(--cyan)' }}>
-                  ${Number(t.sub?.totalPrice ?? 0)} USD
+                  ${Number(t.sub?.totalPrice ?? 0).toLocaleString('es-CL')} CLP
                 </td>
                 <td style={{ padding: '14px 16px' }}>
                   <span style={{
@@ -113,7 +86,7 @@ export default async function VexorTenantsPage() {
                       t.sub?.status === 'suspended' ? 'var(--danger)' : 'var(--warning)',
                   }}>
                     {t.sub?.status === 'active' ? 'Activo' :
-                      t.sub?.status === 'suspended' ? 'Suspendido' : 'Sin suscripción'}
+                      t.sub?.status === 'suspended' ? 'Suspendido' : 'Sin suscripcion'}
                   </span>
                 </td>
                 <td style={{ padding: '14px 16px' }}>
@@ -124,7 +97,7 @@ export default async function VexorTenantsPage() {
                     borderRadius: 6, color: 'var(--muted)',
                     textDecoration: 'none',
                   }}>
-                    Gestionar →
+                    Gestionar {'->'}
                   </Link>
                 </td>
               </tr>
@@ -132,6 +105,6 @@ export default async function VexorTenantsPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </main>
   )
 }
