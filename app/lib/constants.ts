@@ -25,7 +25,7 @@ export const PRODUCTS = [
       'Gestión de múltiples profesionales',
       'Pagos online al reservar',
     ],
-    href: '#contacto',
+    href: '/slotly',
   },
   {
     id: 'shoppio',

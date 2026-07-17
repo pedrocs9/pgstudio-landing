@@ -1,5 +1,6 @@
 import { PRODUCTS } from '../lib/constants'
 import VexorShowcase from './vexor-showcase'
+import SlotlyShowcase from './slotly-showcase'
 
 const productMessages = {
   vexor: {
@@ -11,10 +12,10 @@ const productMessages = {
   },
   slotly: {
     problem: 'Para servicios que pierden tiempo coordinando horas por mensajes y necesitan una agenda más ordenada.',
-    benefit: 'Permitirá gestionar reservas, disponibilidad y recordatorios desde un flujo simple.',
-    status: 'En desarrollo',
-    statusClass: 'status-soon',
-    cta: 'Solicitar acceso anticipado →',
+    benefit: 'Gestiona reservas, disponibilidad y profesionales desde un panel simple y sin fricciones.',
+    status: 'Beta privada',
+    statusClass: 'status-beta',
+    cta: 'Conocer Slotly →',
   },
   shoppio: {
     problem: 'Para comercios que quieren vender online sin construir una tienda desde cero.',
@@ -26,7 +27,7 @@ const productMessages = {
 } as const
 
 export default function Products() {
-  const [vexor, ...futureProducts] = PRODUCTS
+  const [vexor, slotly, shoppio] = PRODUCTS
 
   return (
     <section id="productos" className="section-space" style={{ background: 'var(--bg2)' }}>
@@ -40,6 +41,7 @@ export default function Products() {
           </p>
         </div>
 
+        {/* ── Vexor ── */}
         <article className="featured-product premium-card">
           <div>
             <span className={`status-badge ${productMessages.vexor.statusClass}`}>
@@ -50,43 +52,58 @@ export default function Products() {
             <p className="featured-badge">{vexor.badge}</p>
             <p className="featured-copy">{productMessages.vexor.problem}</p>
             <p className="featured-benefit">{productMessages.vexor.benefit}</p>
-
             <div className="benefit-grid">
               {vexor.features.map((feature) => (
-                <div key={feature}>
-                  <span />
-                  {feature}
-                </div>
+                <div key={feature}><span />{feature}</div>
               ))}
             </div>
-
             <div className="featured-actions">
               <a href={vexor.href} className="btn-primary">{productMessages.vexor.cta}</a>
               <a href="#contacto" className="btn-secondary">Solicitar una reunión</a>
             </div>
           </div>
-
           <div className="featured-visual" aria-label="Dashboard compacto de Vexor para Perfumeria Aurora">
             <VexorShowcase variant="compact" />
           </div>
         </article>
 
-        <div className="future-grid">
-          {futureProducts.map((p) => {
-            const message = productMessages[p.id as 'slotly' | 'shoppio']
+        {/* ── Slotly ── */}
+        <article className="featured-product featured-product--alt premium-card">
+          <div>
+            <span className={`status-badge ${productMessages.slotly.statusClass}`}>
+              {productMessages.slotly.status}
+            </span>
+            <div className="featured-kicker">Agendamiento</div>
+            <h3>{slotly.name}</h3>
+            <p className="featured-badge">{slotly.badge}</p>
+            <p className="featured-copy">{productMessages.slotly.problem}</p>
+            <p className="featured-benefit">{productMessages.slotly.benefit}</p>
+            <div className="benefit-grid">
+              {slotly.features.map((feature) => (
+                <div key={feature}><span />{feature}</div>
+              ))}
+            </div>
+            <div className="featured-actions">
+              <a href={slotly.href} className="btn-primary">{productMessages.slotly.cta}</a>
+              <a href="#contacto" className="btn-secondary">Solicitar acceso</a>
+            </div>
+          </div>
+          <div className="featured-visual" aria-label="Vista de agenda de Slotly">
+            <SlotlyShowcase />
+          </div>
+        </article>
 
-            return (
-              <article key={p.id} className="future-card premium-card">
-                <span className={`status-badge ${message.statusClass}`}>{message.status}</span>
-                <div className="icon-tile">{p.icon}</div>
-                <h3>{p.name}</h3>
-                <p className="product-kicker">by pgstudio · {p.badge}</p>
-                <p>{message.problem}</p>
-                <strong>{message.benefit}</strong>
-                <a href={p.href} className="prod-link prod-link-muted">{message.cta}</a>
-              </article>
-            )
-          })}
+        {/* ── Shoppio ── */}
+        <div className="future-grid">
+          <article className="future-card premium-card">
+            <span className={`status-badge ${productMessages.shoppio.statusClass}`}>{productMessages.shoppio.status}</span>
+            <div className="icon-tile">{shoppio.icon}</div>
+            <h3>{shoppio.name}</h3>
+            <p className="product-kicker">by pgstudio · {shoppio.badge}</p>
+            <p>{productMessages.shoppio.problem}</p>
+            <strong>{productMessages.shoppio.benefit}</strong>
+            <a href={shoppio.href} className="prod-link prod-link-muted">{productMessages.shoppio.cta}</a>
+          </article>
         </div>
       </div>
 
@@ -126,6 +143,10 @@ export default function Products() {
         .status-live {
           background: rgba(5,150,105,0.08);
           color: #047857;
+        }
+        .status-beta {
+          background: rgba(14,165,233,0.1);
+          color: #0369a1;
         }
         .status-soon {
           background: rgba(245,158,11,0.1);
@@ -205,70 +226,6 @@ export default function Products() {
           display: flex;
           min-height: 360px;
           padding: 24px;
-        }
-        .mini-dashboard {
-          background: #fff;
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          box-shadow: var(--shadow-md);
-          padding: 20px;
-          width: 100%;
-        }
-        .mini-header {
-          align-items: center;
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 22px;
-        }
-        .mini-header strong {
-          color: var(--text);
-          font-family: var(--font-display);
-        }
-        .mini-header span {
-          background: var(--cyan-soft);
-          border-radius: 999px;
-          color: var(--cyan);
-          font-size: 12px;
-          font-weight: 800;
-          padding: 6px 10px;
-        }
-        .mini-chart {
-          align-items: end;
-          background: var(--bg);
-          border: 1px solid var(--border);
-          border-radius: 16px;
-          display: grid;
-          gap: 10px;
-          grid-template-columns: repeat(7, 1fr);
-          height: 150px;
-          margin-bottom: 16px;
-          padding: 18px;
-        }
-        .mini-chart i {
-          background: linear-gradient(180deg, var(--cyan-l), var(--cyan));
-          border-radius: 999px 999px 4px 4px;
-          display: block;
-          min-height: 22px;
-        }
-        .mini-list {
-          display: grid;
-          gap: 8px;
-        }
-        .mini-list div {
-          align-items: center;
-          border-bottom: 1px solid rgba(15,23,42,.06);
-          display: flex;
-          justify-content: space-between;
-          padding: 10px 0;
-        }
-        .mini-list div:last-child { border-bottom: 0; }
-        .mini-list span {
-          color: var(--muted);
-          font-size: 13px;
-        }
-        .mini-list strong {
-          color: var(--text);
-          font-size: 13px;
         }
         .future-grid {
           display: grid;
